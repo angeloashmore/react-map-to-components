@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`missing mapped component throws 1`] = `"Could not find a component mapping for block type \\"1\\"."`;
+
+exports[`typical usage 1`] = `
+Array [
+  <div>
+    Type 1: 1
+  </div>,
+  <div>
+    Type 2: 2
+  </div>,
+]
+`;
