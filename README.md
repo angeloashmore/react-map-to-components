@@ -63,7 +63,7 @@ The rendered components will receive the following props:
 | -------------- | ------------------ | ------------------------------------------------------------------ |
 | **`data`**     | `PropTypes.any`    | The element from `list`.                                           |
 | **`index`**    | `PropTypes.number` | The index of the element in `list`.                                |
-| **`key`**      | `PropTypes.any`    | The key of the element from `list` returned from `props.getType`.  |
+| **`key`**      | `PropTypes.any`    | The key of the element from `list` returned from `getKey`.  |
 | **`list`**     | `PropTypes.array`  | The original list of data.                                         |
-| **`type`**     | `PropTypes.any`    | The type of the element from `list` returned from `props.getType`. |
+| **`type`**     | `PropTypes.any`    | The type of the element from `list` returned from `getType`. |
 | **`...props`** | `PropTypes.any`    | Any props passed to `MapToComponents` not in the first table.      |

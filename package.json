@@ -15,6 +15,10 @@
     "test:watch": "npm run test -- --watch"
   },
   "repository": "git@github.com:angeloashmore/react-map-to-components.git",
+  "keywords": [
+    "react",
+    "component"
+  ],
   "author": "Angelo Ashmore",
   "license": "MIT",
   "dependencies": {
