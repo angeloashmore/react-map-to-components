@@ -1,5 +1,5 @@
 {
-  "name": "react-flexible-blocks",
+  "name": "react-map-to-components",
   "version": "0.1.0",
   "description": "React component to render a list of data using a mapping of typenames to components",
   "main": "dist/index.cjs.js",
@@ -14,7 +14,7 @@
     "test": "jest",
     "test:watch": "npm run test -- --watch"
   },
-  "repository": "git@github.com:angeloashmore/react-flexible-blocks.git",
+  "repository": "git@github.com:angeloashmore/react-map-to-components.git",
   "author": "Angelo Ashmore",
   "license": "MIT",
   "dependencies": {

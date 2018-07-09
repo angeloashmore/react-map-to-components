@@ -1,15 +1,15 @@
 import React, { createElement as h } from 'react'
 import renderer from 'react-test-renderer'
-import FlexibleBlocks from '.'
+import MapToComponents from '.'
 
 const defaultProps = {
-  blocks: [1, 2],
-  componentsMap: {
-    1: ({ block }) => h('div', null, `Type 1: ${block}`),
-    2: ({ block }) => h('div', null, `Type 2: ${block}`),
-  },
   getKey: x => x,
-  getTypename: x => x,
+  getType: x => x,
+  list: [1, 2],
+  map: {
+    1: ({ data }) => h('div', null, `Type 1: ${data}`),
+    2: ({ data }) => h('div', null, `Type 2: ${data}`),
+  },
 }
 
 beforeEach(() => {
@@ -22,14 +22,14 @@ afterEach(() => {
 })
 
 test('typical usage', () => {
-  const component = renderer.create(h(FlexibleBlocks, defaultProps))
+  const component = renderer.create(h(MapToComponents, defaultProps))
   const tree = component.toJSON()
   expect(tree).toMatchSnapshot()
 })
 
 test('missing mapped component throws', () => {
-  const props = { ...defaultProps, componentsMap: {} }
+  const props = { ...defaultProps, map: {} }
   expect(() =>
-    renderer.create(h(FlexibleBlocks, props)),
+    renderer.create(h(MapToComponents, props)),
   ).toThrowErrorMatchingSnapshot()
 })
