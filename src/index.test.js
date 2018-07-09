@@ -7,8 +7,8 @@ const defaultProps = {
   getType: x => x,
   list: [1, 2],
   map: {
-    1: ({ data }) => h('div', null, `Type 1: ${data}`),
-    2: ({ data }) => h('div', null, `Type 2: ${data}`),
+    1: props => h('div', null, `Type 1: ${JSON.stringify(props)}`),
+    2: props => h('div', null, `Type 2: ${JSON.stringify(props)}`),
   },
 }
 

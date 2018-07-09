@@ -10,7 +10,7 @@ const MapToComponents = ({ getKey, getType, list, map, ...props }) =>
 
     invariant(Comp, `Could not find a component mapping for type "${type}".`)
 
-    return React.createElement(Comp, { key, data, index, ...props })
+    return React.createElement(Comp, { key, data, list, index, type, ...props })
   })
 
 MapToComponents.propTypes = {
