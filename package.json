@@ -1,7 +1,7 @@
 {
   "name": "react-map-to-components",
   "version": "0.1.0",
-  "description": "React component to render a list of data using a mapping of typenames to components",
+  "description": "React component to map a list of data to a component based on its type",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
