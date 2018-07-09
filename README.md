@@ -28,19 +28,16 @@ const list = [
   { id: 3, type: 'FooterBlock', year: 2074 },
 ]
 
-const App = () => (
-  <div>
-    <MapToComponents
-      getKey={x => x.id}
-      getType={x => x.type}
-      list={list}
-      map={{
-        HeroBlock: Hero,
-        CallToActionBlock: CallToAction,
-      }}
-    />
-  </div>
-)
+const App = () =>
+  <MapToComponents
+    getKey={x => x.id}
+    getType={x => x.type}
+    list={list}
+    map={{
+      HeroBlock: Hero,
+      CallToActionBlock: CallToAction,
+    }}
+  />
 ```
 
 ## Props
