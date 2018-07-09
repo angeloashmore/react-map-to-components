@@ -14,7 +14,8 @@
     "test": "jest",
     "test:watch": "npm run test -- --watch"
   },
-  "respository": {
+  "homepage": "https://github.com/angeloashmore/react-map-to-components",
+  "repository": {
     "type": "git",
     "url": "https://github.com/angeloashmore/react-map-to-components.git"
   },
