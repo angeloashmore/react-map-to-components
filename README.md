@@ -28,6 +28,7 @@ import MapToComponents from 'react-map-to-components'
 // Components to which data is mapped
 import Hero from './Hero'
 import CallToAction from './CallToAction'
+import Footer from './Footer'
 
 const list = [
   { id: 1, type: 'HeroBlock', text: 'Text for a Hero component' },
@@ -43,6 +44,7 @@ const App = () => (
     map={{
       HeroBlock: Hero,
       CallToActionBlock: CallToAction,
+      FooterBlock: Footer,
     }}
   />
 )
