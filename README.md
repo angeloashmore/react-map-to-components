@@ -10,27 +10,7 @@ React component to map a list of data to a component based on its type.
 npm install --save react-map-to-components
 ```
 
-## Usage
-
-Import the `MapToComponents` component and provide the following props:
-
-- **`getKey`**: Function that returns the key for an element in the list.
-  Necessary for React when rendering an array, as in this case.
-- **`getType`**: Function that returns the type for an element in the list.
-- **`list`**: List of data. This can be an array of any type; data is passed
-  directly to the component as the `data` prop.
-- **`map`**: Object that maps a data type to a component to be rendered.
-
-The rendered components will receive the following props:
-
-- Any props passed to `MapToComponents` not listed above.
-- **`data`**: The element from `list`.
-- **`index`**: The index of the element in `list`.
-- **`key`**: The key of the element from `list` returned from `props.getType`.
-- **`list`**: The original list of data.
-- **`type`**: The type of the element from `list` returned from `props.getType`.
-
-### Example
+## Example
 
 ```js
 // App.js
@@ -62,3 +42,22 @@ const App = () => (
   </div>
 )
 ```
+
+## Props
+
+| Name          | Type                                 | Description                                                                                                                                              |
+| ------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`getKey`**  | `PropTypes.func.isRequired`          | Function that returns the key for an element in the list. A unique key for each element is necessary for React when rendering an array, as in this case. |
+| **`getType`** | `PropTypes.func.isRequired`          | Function that returns the type for an element in the list.                                                                                               |
+| **`list`**    | `PropTypes.array`                    | List of data. This can be an array of any type; data is passed directly to the component as the `data` prop.                                             |
+| **`map`**     | `PropTypes.objectOf(PropTypes.func)` | Object that maps a data type to a React component to be rendered.                                                                                        |
+
+The rendered components will receive the following props:
+
+| Name        | Type               | Description                                                        |
+| ----------- | ------------------ | ------------------------------------------------------------------ |
+| **`data`**  | `PropTypes.any`    | The element from `list`.                                           |
+| **`index`** | `PropTypes.number` | The index of the element in `list`.                                |
+| **`key`**   | `PropTypes.any`    | The key of the element from `list` returned from `props.getType`.  |
+| **`list`**  | `PropTypes.array`  | The original list of data.                                         |
+| **`type`**  | `PropTypes.any`    | The type of the element from `list` returned from `props.getType`. |
