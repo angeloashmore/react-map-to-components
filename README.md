@@ -28,7 +28,7 @@ const list = [
   { id: 3, type: 'FooterBlock', year: 2074 },
 ]
 
-const App = () =>
+const App = () => (
   <MapToComponents
     getKey={x => x.id}
     getType={x => x.type}
@@ -38,6 +38,7 @@ const App = () =>
       CallToActionBlock: CallToAction,
     }}
   />
+)
 ```
 
 ## Props
@@ -51,10 +52,11 @@ const App = () =>
 
 The rendered components will receive the following props:
 
-| Name        | Type               | Description                                                        |
-| ----------- | ------------------ | ------------------------------------------------------------------ |
-| **`data`**  | `PropTypes.any`    | The element from `list`.                                           |
-| **`index`** | `PropTypes.number` | The index of the element in `list`.                                |
-| **`key`**   | `PropTypes.any`    | The key of the element from `list` returned from `props.getType`.  |
-| **`list`**  | `PropTypes.array`  | The original list of data.                                         |
-| **`type`**  | `PropTypes.any`    | The type of the element from `list` returned from `props.getType`. |
+| Name           | Type               | Description                                                        |
+| -------------- | ------------------ | ------------------------------------------------------------------ |
+| **`data`**     | `PropTypes.any`    | The element from `list`.                                           |
+| **`index`**    | `PropTypes.number` | The index of the element in `list`.                                |
+| **`key`**      | `PropTypes.any`    | The key of the element from `list` returned from `props.getType`.  |
+| **`list`**     | `PropTypes.array`  | The original list of data.                                         |
+| **`type`**     | `PropTypes.any`    | The type of the element from `list` returned from `props.getType`. |
+| **`...props`** | `PropTypes.any`    | Any props passed to `MapToComponents` not in the first table.      |
