@@ -2,6 +2,12 @@
 
 React component to map a list of data to a component based on its type.
 
+This component is especially useful when processing data from an external
+source with a flexible nature, such as [Prismic
+Slices](https://prismic.io/feature/dynamic-layout-content-components) and
+[WordPress ACF Flexible
+Content](https://www.advancedcustomfields.com/resources/flexible-content/).
+
 ## Status
 
 ## Installation
