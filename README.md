@@ -11,7 +11,7 @@ Content](https://www.advancedcustomfields.com/resources/flexible-content/).
 ## Status
 
 [![npm version](https://badge.fury.io/js/react-map-to-components.svg)](http://badge.fury.io/js/react-map-to-components)
-[![Build Status](https://secure.travis-ci.org/angeloashmore/react-map-to-components.svg?branch=master)](http://travis-ci.org/angeloashmore/react-map-to-components?branch=master)
+[![Build Status](https://travis-ci.com/angeloashmore/react-map-to-components.svg?branch=master)](https://travis-ci.com/angeloashmore/react-map-to-components)
 
 ## Installation
 
