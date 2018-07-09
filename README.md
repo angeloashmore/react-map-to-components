@@ -13,8 +13,6 @@ npm install --save react-map-to-components
 ## Example
 
 ```js
-// App.js
-
 import React from 'react'
 import MapToComponents from 'react-map-to-components'
 
