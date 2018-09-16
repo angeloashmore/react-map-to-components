@@ -16,19 +16,20 @@ const MapToComponents = ({
     const Comp = map[type]
     invariant(Comp, `Could not find a component mapping for type "${type}".`)
 
-    let mappedProps = {}
-    const compMapDataToProps = mapDataToProps[type]
-    if (compMapDataToProps) mappedProps = compMapDataToProps(data)
-
-    return React.createElement(Comp, {
+    const passedProps = {
       key,
       data,
       list,
       index,
       type,
       ...props,
-      ...mappedProps,
-    })
+    }
+
+    let mappedProps = {}
+    const compMapDataToProps = mapDataToProps[type]
+    if (compMapDataToProps) mappedProps = compMapDataToProps(data, passedProps)
+
+    return React.createElement(Comp, { ...passedProps, ...mappedProps })
   })
 
 MapToComponents.propTypes = {
