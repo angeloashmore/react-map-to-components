@@ -10,6 +10,9 @@ const defaultProps = {
     1: props => h('div', null, `Type 1: ${JSON.stringify(props)}`),
     2: props => h('div', null, `Type 2: ${JSON.stringify(props)}`),
   },
+  mapDataToProps: {
+    2: data => ({ number: data }),
+  },
 }
 
 beforeEach(() => {

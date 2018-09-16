@@ -8,7 +8,7 @@ Array [
     Type 1: {"data":1,"list":[1,2],"index":0,"type":1}
   </div>,
   <div>
-    Type 2: {"data":2,"list":[1,2],"index":1,"type":2}
+    Type 2: {"data":2,"list":[1,2],"index":1,"type":2,"number":2}
   </div>,
 ]
 `;
