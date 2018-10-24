@@ -27,7 +27,7 @@ const MapToComponents = ({
 
     let mappedProps = {}
     const compMapDataToProps = mapDataToProps[type]
-    if (compMapDataToProps) mappedProps = compMapDataToProps(data, passedProps)
+    if (compMapDataToProps) mappedProps = compMapDataToProps(passedProps)
 
     return React.createElement(Comp, { ...passedProps, ...mappedProps })
   })

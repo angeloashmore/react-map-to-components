@@ -11,7 +11,7 @@ const defaultProps = {
     2: props => h('div', null, `Type 2: ${JSON.stringify(props)}`),
   },
   mapDataToProps: {
-    2: data => ({ number: data }),
+    2: ({ data }) => ({ number: data }),
   },
 }
 
