@@ -47,7 +47,7 @@ const App = () => (
       FooterBlock: Footer,
     }}
     mapDataToProps={{
-      HeroBlock: data => ({
+      HeroBlock: ({ data }) => ({
         text: data.text,
       }),
     }}
