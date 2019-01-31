@@ -5,10 +5,11 @@ import MapToComponents from '.'
 const defaultProps = {
   getKey: x => x,
   getType: x => x,
-  list: [1, 2],
+  list: [1, 2, 3, 2, 1],
   map: {
     1: props => h('div', null, `Type 1: ${JSON.stringify(props)}`),
     2: props => h('div', null, `Type 2: ${JSON.stringify(props)}`),
+    3: props => h('div', null, `Type 3: ${JSON.stringify(props)}`),
   },
   mapDataToProps: {
     2: ({ data }) => ({ number: data }),

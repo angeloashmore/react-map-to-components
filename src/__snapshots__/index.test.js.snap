@@ -5,10 +5,19 @@ exports[`missing mapped component throws 1`] = `"Could not find a component mapp
 exports[`typical usage 1`] = `
 Array [
   <div>
-    Type 1: {"data":1,"list":[1,2],"index":0,"type":1}
+    Type 1: {"data":1,"list":[1,2,3,2,1],"index":0,"type":1,"next":2}
   </div>,
   <div>
-    Type 2: {"data":2,"list":[1,2],"index":1,"type":2,"number":2}
+    Type 2: {"data":2,"list":[1,2,3,2,1],"index":1,"type":2,"previous":1,"next":3,"number":2}
+  </div>,
+  <div>
+    Type 3: {"data":3,"list":[1,2,3,2,1],"index":2,"type":3,"previous":2,"next":2}
+  </div>,
+  <div>
+    Type 2: {"data":2,"list":[1,2,3,2,1],"index":3,"type":2,"previous":3,"next":1,"number":2}
+  </div>,
+  <div>
+    Type 1: {"data":1,"list":[1,2,3,2,1],"index":4,"type":1,"previous":2}
   </div>,
 ]
 `;
