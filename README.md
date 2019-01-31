@@ -74,5 +74,7 @@ The rendered components will receive the following props:
 | **`key`**            | `PropTypes.any`    | The key of the element from `list` returned from `getKey`.         |
 | **`list`**           | `PropTypes.array`  | The original list of data.                                         |
 | **`type`**           | `PropTypes.any`    | The type of the element from `list` returned from `getType`.       |
+| **`previous`**       | `PropTypes.any`    | The previous element from `list`. `undefined` if first element.    |
+| **`next`**           | `PropTypes.any`    | The next element from `list`. `undefined` if last element.         |
 | **`...props`**       | `PropTypes.any`    | Any props passed to `MapToComponents` not in the first table.      |
 | **`...mappedProps`** | `PropTypes.any`    | Any props returned from the `mapDataToProps` function if provided. |
