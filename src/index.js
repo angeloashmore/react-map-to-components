@@ -22,9 +22,22 @@ const MapToComponents = ({
       list,
       index,
       type,
-      previous: list[index - 1],
-      next: list[index + 1],
       ...props,
+    }
+
+    const previous = list[index - 1]
+    const next = list[index + 1]
+
+    if (previous) {
+      passedProps.previous = previous
+      passedProps.prevousKey = getKey(previous, index - 1, list)
+      passedProps.prevousType = getType(previous, index - 1, list)
+    }
+
+    if (next) {
+      passedProps.next = next
+      passedProps.nextKey = getKey(next, index - 1, list)
+      passedProps.nextType = getType(next, index - 1, list)
     }
 
     let mappedProps = {}
