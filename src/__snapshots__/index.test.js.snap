@@ -8,16 +8,16 @@ Array [
     Type 1: {"data":1,"list":[1,2,3,2,1],"index":0,"type":1,"next":2,"nextKey":2,"nextType":2}
   </div>,
   <div>
-    Type 2: {"data":2,"list":[1,2,3,2,1],"index":1,"type":2,"previous":1,"prevousKey":1,"prevousType":1,"next":3,"nextKey":3,"nextType":3,"number":2}
+    Type 2: {"data":2,"list":[1,2,3,2,1],"index":1,"type":2,"previous":1,"previousKey":1,"previousType":1,"next":3,"nextKey":3,"nextType":3,"number":2}
   </div>,
   <div>
-    Type 3: {"data":3,"list":[1,2,3,2,1],"index":2,"type":3,"previous":2,"prevousKey":2,"prevousType":2,"next":2,"nextKey":2,"nextType":2}
+    Type 3: {"data":3,"list":[1,2,3,2,1],"index":2,"type":3,"previous":2,"previousKey":2,"previousType":2,"next":2,"nextKey":2,"nextType":2}
   </div>,
   <div>
-    Type 2: {"data":2,"list":[1,2,3,2,1],"index":3,"type":2,"previous":3,"prevousKey":3,"prevousType":3,"next":1,"nextKey":1,"nextType":1,"number":2}
+    Type 2: {"data":2,"list":[1,2,3,2,1],"index":3,"type":2,"previous":3,"previousKey":3,"previousType":3,"next":1,"nextKey":1,"nextType":1,"number":2}
   </div>,
   <div>
-    Type 1: {"data":1,"list":[1,2,3,2,1],"index":4,"type":1,"previous":2,"prevousKey":2,"prevousType":2}
+    Type 1: {"data":1,"list":[1,2,3,2,1],"index":4,"type":1,"previous":2,"previousKey":2,"previousType":2}
   </div>,
 ]
 `;
