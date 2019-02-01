@@ -30,8 +30,8 @@ const MapToComponents = ({
 
     if (previous) {
       passedProps.previous = previous
-      passedProps.prevousKey = getKey(previous, index - 1, list)
-      passedProps.prevousType = getType(previous, index - 1, list)
+      passedProps.previousKey = getKey(previous, index - 1, list)
+      passedProps.previousType = getType(previous, index - 1, list)
     }
 
     if (next) {
