@@ -36,8 +36,8 @@ const MapToComponents = ({
 
     if (next) {
       passedProps.next = next
-      passedProps.nextKey = getKey(next, index - 1, list)
-      passedProps.nextType = getType(next, index - 1, list)
+      passedProps.nextKey = getKey(next, index + 1, list)
+      passedProps.nextType = getType(next, index + 1, list)
     }
 
     let mappedProps = {}
