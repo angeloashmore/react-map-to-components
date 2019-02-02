@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer'
 import MapToComponents from '.'
 
 const defaultProps = {
-  getKey: x => x,
+  getKey: (x, index, list) => `${x}__${index}__${list.length}`,
   getType: x => x,
   list: [1, 2, 3, 2, 1],
   map: {
