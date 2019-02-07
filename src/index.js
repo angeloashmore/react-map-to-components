@@ -52,6 +52,7 @@ MapToComponents.propTypes = {
   list: PropTypes.array,
   map: PropTypes.objectOf(PropTypes.func),
   mapDataToProps: PropTypes.objectOf(PropTypes.func),
+  default: PropTypes.func,
 }
 
 MapToComponents.defaultProps = {
