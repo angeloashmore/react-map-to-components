@@ -64,17 +64,22 @@ const App = () => (
 | **`list`**           | `PropTypes.array`                    | List of data. This can be an array of any type; data is passed directly to the component as the `data` prop.                                             |
 | **`map`**            | `PropTypes.objectOf(PropTypes.func)` | Object that maps a data type to a React component to be rendered.                                                                                        |
 | **`mapDataToProps`** | `PropTypes.objectOf(PropTypes.func)` | Object that maps a data type to a function that returns an object of props to be passed to the React component.                                          |
+| **`default`**        | `PropTypes.func`                     | React component to be rendered if element type is not defined in `map`.                                                                                  |
 
 The rendered components will receive the following props:
 
-| Name                 | Type               | Description                                                        |
-| -------------------- | ------------------ | ------------------------------------------------------------------ |
-| **`data`**           | `PropTypes.any`    | The element from `list`.                                           |
-| **`index`**          | `PropTypes.number` | The index of the element in `list`.                                |
-| **`key`**            | `PropTypes.any`    | The key of the element from `list` returned from `getKey`.         |
-| **`list`**           | `PropTypes.array`  | The original list of data.                                         |
-| **`type`**           | `PropTypes.any`    | The type of the element from `list` returned from `getType`.       |
-| **`previous`**       | `PropTypes.any`    | The previous element from `list`. `undefined` if first element.    |
-| **`next`**           | `PropTypes.any`    | The next element from `list`. `undefined` if last element.         |
-| **`...props`**       | `PropTypes.any`    | Any props passed to `MapToComponents` not in the first table.      |
-| **`...mappedProps`** | `PropTypes.any`    | Any props returned from the `mapDataToProps` function if provided. |
+| Name                 | Type               | Description                                                                 |
+| -------------------- | ------------------ | --------------------------------------------------------------------------- |
+| **`data`**           | `PropTypes.any`    | The element from `list`.                                                    |
+| **`index`**          | `PropTypes.number` | The index of the element in `list`.                                         |
+| **`key`**            | `PropTypes.any`    | The key of the element from `list` returned from `getKey`.                  |
+| **`list`**           | `PropTypes.array`  | The original list of data.                                                  |
+| **`type`**           | `PropTypes.any`    | The type of the element from `list` returned from `getType`.                |
+| **`previous`**       | `PropTypes.any`    | The previous element from `list`. `undefined` if first element.             |
+| **`previousKey`**    | `PropTypes.any`    | The key of the previous element from `list`. `undefined` if first element.  |
+| **`previousType`**   | `PropTypes.any`    | The type of the previous element from `list`. `undefined` if first element. |
+| **`next`**           | `PropTypes.any`    | The next element from `list`. `undefined` if last element.                  |
+| **`nextKey`**        | `PropTypes.any`    | The key of the next element from `list`. `undefined` if last element.       |
+| **`nextType`**       | `PropTypes.any`    | The type of the next element from `list`. `undefined` if last element.      |
+| **`...props`**       | `PropTypes.any`    | Any props passed to `MapToComponents` not in the first table.               |
+| **`...mappedProps`** | `PropTypes.any`    | Any props returned from the `mapDataToProps` function if provided.          |
