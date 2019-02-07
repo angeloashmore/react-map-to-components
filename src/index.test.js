@@ -9,6 +9,7 @@ const defaultProps = {
   map: {
     1: () => 'Type 1',
     2: () => 'Type 2',
+    withMapDataToProps: ({ mappedData }) => `mappedData=${mappedData}`,
   },
   mapDataToProps: {
     withMapDataToProps: ({ data }) => ({ mappedData: data }),
@@ -111,6 +112,14 @@ test('should provide map value with any extra props', () => {
   )
 
   expect(mapValueProps.arbitraryData).toBe('arbitraryData')
+})
+
+test('should provide map value with transformed props via mapDataToProps', () => {
+  const tree = renderer.create(
+    <MapToComponents {...defaultProps} list={[1, 'withMapDataToProps']} />,
+  )
+
+  expect(tree.toJSON()).toEqual(['Type 1', 'mappedData=withMapDataToProps'])
 })
 
 test('should render default mapping if mapping is not available', () => {
