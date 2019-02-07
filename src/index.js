@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import invariant from 'invariant'
 
 const MapToComponents = ({
   getKey,
@@ -8,13 +7,13 @@ const MapToComponents = ({
   list,
   map,
   mapDataToProps,
+  default: defaultMapping,
   ...props
 }) =>
   list.map((data, index) => {
     const key = getKey(data, index, list)
     const type = getType(data, index, list)
-    const Comp = map[type]
-    invariant(Comp, `Could not find a component mapping for type "${type}".`)
+    const Comp = map.hasOwnProperty(type) ? map[type] : defaultMapping
 
     const passedProps = {
       key,
@@ -59,6 +58,9 @@ MapToComponents.defaultProps = {
   list: [],
   map: {},
   mapDataToProps: {},
+  default: ({ type }) => {
+    throw new Error(`Could not find a component mapping for type "${type}"`)
+  },
 }
 
 export default MapToComponents
