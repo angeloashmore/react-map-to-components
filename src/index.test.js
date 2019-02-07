@@ -31,9 +31,9 @@ test('should provide getKey with item, index, and list', () => {
   )
 
   expect(allArgs).toEqual({
-    0: { item: 1, index: 0, list: [...defaultList] },
-    1: { item: 2, index: 1, list: [...defaultList] },
-    2: { item: 1, index: 2, list: [...defaultList] },
+    0: { item: 1, index: 0, list: defaultList },
+    1: { item: 2, index: 1, list: defaultList },
+    2: { item: 1, index: 2, list: defaultList },
   })
 })
 
