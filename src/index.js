@@ -21,6 +21,7 @@ const MapToComponents = ({
       list,
       index,
       type,
+      map,
       ...props,
     }
 

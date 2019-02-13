@@ -80,7 +80,7 @@ test('should provide map value with collection of props', () => {
     />,
   )
 
-  expect(mapValueProps).toEqual({
+  expect(mapValueProps).toMatchObject({
     data: 2,
     list: defaultProps.list,
     index: 1,
@@ -92,6 +92,8 @@ test('should provide map value with collection of props', () => {
     previousKey: 0,
     previousType: 1,
   })
+
+  expect(Object.keys(mapValueProps.map)).toEqual(['1', '2'])
 })
 
 test('should provide map value with any extra props', () => {
