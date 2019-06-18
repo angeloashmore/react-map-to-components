@@ -14,9 +14,7 @@ const MapToComponents = React.memo(
   }) => {
     const keys = list.map(getKey)
     const types = list.map(getType)
-    const comps = types.map(type =>
-      map.hasOwnProperty(type) ? map[type] : defaultMapping,
-    )
+    const comps = types.map(type => map[type] || defaultMapping)
     let contexts = []
 
     const gatherData = index => ({
@@ -44,17 +42,15 @@ const MapToComponents = React.memo(
     })
 
     contexts = list.map((_, index) => {
-      const type = types[index]
-      if (!mapDataToContext.hasOwnProperty(type)) return {}
+      const fn = mapDataToContext[types[index]]
 
-      return mapDataToContext[type](gatherData(index))
+      return fn ? fn(gatherData(index)) : {}
     })
 
     const props = list.map((_, index) => {
-      const type = types[index]
-      if (!mapDataToProps.hasOwnProperty(type)) return {}
+      const fn = mapDataToProps[types[index]]
 
-      return mapDataToProps[type](gatherData(index))
+      return fn ? fn(gatherData(index)) : {}
     })
 
     return props.map((mappedProps, index) =>
