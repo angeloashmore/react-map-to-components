@@ -22,6 +22,7 @@ const MapToComponents = React.memo(
       keys,
       types,
       comps,
+      contexts,
       map,
       index,
       data: list[index],
