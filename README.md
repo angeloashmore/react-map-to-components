@@ -19,16 +19,14 @@ Content](https://www.advancedcustomfields.com/resources/flexible-content/).
 npm install --save react-map-to-components
 ```
 
-## Example
+## How to use
 
-```js
+`MapToComponents` takes a list and renders a list of components using a mapping
+object. The following example shows the simplest use case.
+
+```jsx
 import React from 'react'
 import MapToComponents from 'react-map-to-components'
-
-// Components to which data is mapped
-import Hero from './Hero'
-import CallToAction from './CallToAction'
-import Footer from './Footer'
 
 const list = [
   { id: 1, type: 'HeroBlock', text: 'Text for a Hero component' },
@@ -44,18 +42,75 @@ const App = () => (
     map={{
       HeroBlock: Hero,
       CallToActionBlock: CallToAction,
-      FooterBlock: Footer,
-    }}
-    mapDataToProps={{
-      HeroBlock: ({ data }) => ({
-        text: data.text,
-      }),
+      FooterBlock: props => <Footer foo="bar" {...props} />,
     }}
   />
 )
 ```
 
+In this example, `list` is an array of objects. `MapToComponents` will render a
+list of components using that list by performing the following:
+
+1. For each item in the list, get a key using `getKey`. `getKey` should return
+   a unique value for each item in the list, such an an ID or UUID. This value
+   will be used as the `key` prop when rendering the component.
+
+2. For each item in the list, get a type using `getType`. `getType` should
+   return a string with a property in the `map` object corresponding to a React
+   component. If `getType` returns a string without a property in `map`, an
+   error will be thrown by default. **The default behavior can be overriden if
+   you have a default component to render**.
+
+3. Using the key and type for each item in the list, a component is rendered
+   for each item. The component used is determined by the type and component
+   key-value mapping in `map`.
+
+Something like the following would be rendered by `MapToComponents`:
+
+```js
+;[<Hero key={1} />, <CallToAction key={2} />, <Footer foo="bar" key={3} />]
+```
+
+## Providing props to components
+
+In the previous example, notice that an item with type `FooterBlock` would
+render `Footer` with the prop `foo="bar"` and values in `props`. Using this
+method, you can provide default props to your components rather than passing
+just a reference to a component, as is done with `Hero` and `CallToAction`.
+
+By default, no props **except `key`** are passed to the components.
+
+To pass props to the components using data derived from the object in the list,
+you can provide `mapDataToProps` to `MapToComponents`.
+
+```jsx
+<MapToComponents
+  getKey={x => x.id}
+  getType={x => x.type}
+  list={list}
+  map={{
+    HeroBlock: Hero,
+    CallToActionBlock: CallToAction,
+    FooterBlock: props => <Footer foo="bar" {...props} />,
+  }}
+  mapDataToProps={{
+    HeroBlock: ({ data }) => ({ text: data.text }),
+    CallToAction: ({ data }) => ({ buttonText: data.buttonText }),
+    FooterBlock: ({ data }) => ({ year: data.year }),
+  }}
+/>
+```
+
+TODO: Write the following:
+
+- Explain data available in `mapDataToProps` functions
+- Explain `mapDataToContext`
+- Update props table
+
 ## Props
+
+NOTE: Outdated list of props below. Please read the source code and tests until
+the table is updated.
 
 | Name                 | Type                                 | Description                                                                                                                                              |
 | -------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
