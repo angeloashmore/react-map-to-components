@@ -4,7 +4,6 @@
   "description": "React component to map a list of data to a component based on its type",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "build:watch": "npm run build -- --watch",
