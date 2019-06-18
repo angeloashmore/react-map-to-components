@@ -10,7 +10,7 @@
     "build:watch": "npm run build -- --watch",
     "format": "prettier --write 'src/**/*.js' 'rollup.config.js' 'README.md'",
     "prebuild": "rimraf dist",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "jest",
     "test:watch": "npm run test -- --watch"
   },
@@ -25,13 +25,9 @@
   ],
   "author": "Angelo Ashmore",
   "license": "MIT",
-  "dependencies": {
-    "prop-types": "^15.6.2"
-  },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
-    "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",

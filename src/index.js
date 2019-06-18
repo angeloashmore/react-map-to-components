@@ -1,68 +1,66 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-const MapToComponents = ({
-  getKey,
-  getType,
-  list,
-  map,
-  mapDataToProps,
-  default: defaultMapping,
-  ...props
-}) =>
-  list.map((data, index) => {
-    const key = getKey(data, index, list)
-    const type = getType(data, index, list)
-    const Comp = map.hasOwnProperty(type) ? map[type] : defaultMapping
+const MapToComponents = React.memo(
+  ({
+    getKey,
+    getType,
+    list = [],
+    map = {},
+    mapDataToContext = {},
+    mapDataToProps = {},
+    default: defaultMapping = ({ type }) => {
+      throw new Error(`Could not find a component mapping for type "${type}"`)
+    },
+  }) => {
+    const keys = list.map(getKey)
+    const types = list.map(getType)
+    const comps = types.map(type =>
+      map.hasOwnProperty(type) ? map[type] : defaultMapping,
+    )
+    let contexts = []
 
-    const passedProps = {
-      key,
-      data,
+    const gatherData = index => ({
       list,
-      index,
-      type,
+      keys,
+      types,
+      comps,
       map,
-      ...props,
-    }
+      index,
+      data: list[index],
+      context: contexts[index],
+      key: keys[index],
+      type: types[index],
+      Comp: comps[index],
+      previousData: list[index - 1],
+      previousContext: contexts[index - 1],
+      previousKey: keys[index - 1],
+      previousType: types[index - 1],
+      PreviousComp: comps[index - 1],
+      nextData: list[index + 1],
+      nextContext: contexts[index + 1],
+      nextKey: keys[index + 1],
+      nextType: types[index + 1],
+      NextComp: comps[index + 1],
+    })
 
-    const previous = list[index - 1]
-    const next = list[index + 1]
+    contexts = list.map((_, index) => {
+      const type = types[index]
+      if (!mapDataToContext.hasOwnProperty(type)) return {}
 
-    if (previous) {
-      passedProps.previous = previous
-      passedProps.previousKey = getKey(previous, index - 1, list)
-      passedProps.previousType = getType(previous, index - 1, list)
-    }
+      return mapDataToContext[type](gatherData(index))
+    })
 
-    if (next) {
-      passedProps.next = next
-      passedProps.nextKey = getKey(next, index + 1, list)
-      passedProps.nextType = getType(next, index + 1, list)
-    }
+    const props = list.map((_, index) => {
+      const type = types[index]
+      if (!mapDataToProps.hasOwnProperty(type)) return {}
 
-    let mappedProps = {}
-    const compMapDataToProps = mapDataToProps[type]
-    if (compMapDataToProps) mappedProps = compMapDataToProps(passedProps)
+      return mapDataToProps[type](gatherData(index))
+    })
 
-    return React.createElement(Comp, { ...passedProps, ...mappedProps })
-  })
-
-MapToComponents.propTypes = {
-  getKey: PropTypes.func.isRequired,
-  getType: PropTypes.func.isRequired,
-  list: PropTypes.array,
-  map: PropTypes.objectOf(PropTypes.func),
-  mapDataToProps: PropTypes.objectOf(PropTypes.func),
-  default: PropTypes.func,
-}
-
-MapToComponents.defaultProps = {
-  list: [],
-  map: {},
-  mapDataToProps: {},
-  default: ({ type }) => {
-    throw new Error(`Could not find a component mapping for type "${type}"`)
+    return props.map((mappedProps, index) =>
+      comps[index]({ key: keys[index], ...mappedProps }),
+    )
   },
-}
+)
 
 export default MapToComponents
