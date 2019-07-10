@@ -101,6 +101,31 @@ you can provide `mapDataToProps` to `MapToComponents`.
 />
 ```
 
+Functions defined in `mapDataToProps` receive an object of data as its only argument with the following values:
+
+- `list`: The original list of data.
+- `keys`: List of keys for each element in `list`.
+- `types`: List of types for each element in `list`.
+- `comps`: List of components for each element in `list`.
+- `contexts`: List of context values for each element in `list`.
+- `map`: The value of the `map` prop.
+- `data`: The current element.
+- `index`: The index for the current element.
+- `context`: The context for the current element.
+- `key`: The key for the current element.
+- `type`: The type for the current element.
+- `Comp`: The component for the current element.
+- `previousData`: The previous element.
+- `previousContext`: The context for the previous element.
+- `previousKey`: The key for the previous element.
+- `previousType`: The type for the previous element.
+- `PreviousComp`: The component for the previous element.
+- `nextData`: The next element.
+- `nextContext`: The context for the next element.
+- `nextKey`: The key for the next element.
+- `nextType`: The type for the next element.
+- `NextComp`: The component for the next element.
+
 TODO: Write the following:
 
 - Explain data available in `mapDataToProps` functions
