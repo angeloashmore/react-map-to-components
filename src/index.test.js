@@ -1,145 +1,168 @@
-import React from 'react'
+import { createElement as h } from 'react'
 import renderer from 'react-test-renderer'
 import MapToComponents from '.'
 
 const defaultProps = {
-  getKey: (_, i) => i,
-  getType: x => x,
-  list: [1, 2, 1],
+  getKey: jest.fn().mockImplementation((_, i) => i),
+  getType: jest.fn().mockImplementation(x => x),
+  list: [1, 2, 'withMapDataToProps', 1],
   map: {
-    1: () => 'Type 1',
-    2: () => 'Type 2',
-    withMapDataToProps: ({ mappedData }) => `mappedData=${mappedData}`,
+    1: jest.fn().mockReturnValue('Type 1'),
+    2: jest.fn().mockReturnValue('Type 2'),
+    withMapDataToProps: jest.fn().mockReturnValue('withMapDataToProps'),
+  },
+  mapDataToContext: {
+    withMapDataToProps: jest.fn().mockReturnValue({ mappedContext: true }),
   },
   mapDataToProps: {
-    withMapDataToProps: ({ data }) => ({ mappedData: data }),
+    withMapDataToProps: jest.fn().mockReturnValue({ mappedData: true }),
   },
 }
 
+beforeEach(() => jest.clearAllMocks())
+
 test('should provide getKey with item, index, and list', () => {
-  const { list: defaultList } = defaultProps
-  let allArgs = {}
+  const { list } = defaultProps
+  const tree = renderer.create(h(MapToComponents, defaultProps))
 
-  const tree = renderer.create(
-    <MapToComponents
-      {...defaultProps}
-      getKey={(item, index, list) => {
-        allArgs[index] = { item, index, list }
-        return index
-      }}
-    />,
-  )
-
-  expect(allArgs).toEqual({
-    0: { item: 1, index: 0, list: defaultList },
-    1: { item: 2, index: 1, list: defaultList },
-    2: { item: 1, index: 2, list: defaultList },
-  })
+  expect(defaultProps.getKey).toHaveBeenNthCalledWith(1, list[0], 0, list)
+  expect(defaultProps.getKey).toHaveBeenNthCalledWith(2, list[1], 1, list)
+  expect(defaultProps.getKey).toHaveBeenNthCalledWith(3, list[2], 2, list)
+  expect(defaultProps.getKey).toHaveBeenNthCalledWith(4, list[3], 3, list)
 })
 
 test('should provide getType with item, index, and list', () => {
-  const { list: defaultList } = defaultProps
-  let allArgs = {}
+  const { list } = defaultProps
+  const tree = renderer.create(h(MapToComponents, defaultProps))
 
-  const tree = renderer.create(
-    <MapToComponents
-      {...defaultProps}
-      getType={(item, index, list) => {
-        allArgs[index] = { item, index, list }
-        return item
-      }}
-    />,
-  )
-
-  expect(allArgs).toEqual({
-    0: { item: 1, index: 0, list: defaultList },
-    1: { item: 2, index: 1, list: defaultList },
-    2: { item: 1, index: 2, list: defaultList },
-  })
+  expect(defaultProps.getType).toHaveBeenNthCalledWith(1, list[0], 0, list)
+  expect(defaultProps.getType).toHaveBeenNthCalledWith(2, list[1], 1, list)
+  expect(defaultProps.getType).toHaveBeenNthCalledWith(3, list[2], 2, list)
+  expect(defaultProps.getType).toHaveBeenNthCalledWith(4, list[3], 3, list)
 })
 
 test('should render list using components from map', () => {
-  const tree = renderer.create(<MapToComponents {...defaultProps} />)
+  const tree = renderer.create(h(MapToComponents, defaultProps))
 
-  expect(tree.toJSON()).toEqual(['Type 1', 'Type 2', 'Type 1'])
+  expect(tree.toJSON()).toEqual([
+    'Type 1',
+    'Type 2',
+    'withMapDataToProps',
+    'Type 1',
+  ])
 })
 
-test('should provide map value with collection of props', () => {
-  let mapValueProps
-
+test('should provide only key prop to mapped component by default', () => {
   const tree = renderer.create(
-    <MapToComponents
-      {...defaultProps}
-      map={{
-        1: () => null,
-        2: props => {
-          mapValueProps = props
-          return null
-        },
-      }}
-    />,
+    h(MapToComponents, {
+      ...defaultProps,
+      mapDataToContext: undefined,
+      mapDataToProps: undefined,
+    }),
   )
 
-  expect(mapValueProps).toMatchObject({
-    data: 2,
-    list: defaultProps.list,
-    index: 1,
-    type: 2,
-    next: 1,
-    nextKey: 2,
-    nextType: 1,
-    previous: 1,
-    previousKey: 0,
-    previousType: 1,
+  expect(defaultProps.map[1]).toHaveBeenNthCalledWith(1, { key: 0 })
+  expect(defaultProps.map[2]).toHaveBeenNthCalledWith(1, { key: 1 })
+  expect(defaultProps.map.withMapDataToProps).toHaveBeenNthCalledWith(1, {
+    key: 2,
   })
-
-  expect(Object.keys(mapValueProps.map)).toEqual(['1', '2'])
+  expect(defaultProps.map[1]).toHaveBeenNthCalledWith(2, { key: 3 })
 })
 
-test('should provide map value with any extra props', () => {
-  let mapValueProps
+test('should provide mapped props to mapped component', () => {
+  const tree = renderer.create(h(MapToComponents, defaultProps))
 
-  const tree = renderer.create(
-    <MapToComponents
-      {...defaultProps}
-      map={{
-        1: () => null,
-        2: props => {
-          mapValueProps = props
-          return null
-        },
-      }}
-      arbitraryData="arbitraryData"
-    />,
-  )
-
-  expect(mapValueProps.arbitraryData).toBe('arbitraryData')
+  expect(defaultProps.map.withMapDataToProps).toHaveBeenCalledWith({
+    key: 2,
+    mappedData: true,
+  })
 })
 
-test('should provide map value with transformed props via mapDataToProps', () => {
-  const tree = renderer.create(
-    <MapToComponents {...defaultProps} list={[1, 'withMapDataToProps']} />,
-  )
+test('should provide detailed data to mapDataToProps', () => {
+  const { list } = defaultProps
+  const tree = renderer.create(h(MapToComponents, defaultProps))
 
-  expect(tree.toJSON()).toEqual(['Type 1', 'mappedData=withMapDataToProps'])
+  expect(defaultProps.mapDataToProps.withMapDataToProps).toHaveBeenCalledWith({
+    list,
+    keys: list.map(defaultProps.getKey),
+    types: list.map(defaultProps.getType),
+    comps: [
+      defaultProps.map[1],
+      defaultProps.map[2],
+      defaultProps.map.withMapDataToProps,
+      defaultProps.map[1],
+    ],
+    contexts: [{}, {}, { mappedContext: true }, {}],
+    map: defaultProps.map,
+    index: 2,
+    data: list[2],
+    context: { mappedContext: true },
+    key: defaultProps.getKey(list[2], 2, list),
+    type: defaultProps.getType(list[2], 2, list),
+    Comp: defaultProps.map.withMapDataToProps,
+    previousData: list[1],
+    previousContext: {},
+    previousKey: defaultProps.getKey(list[1], 1, list),
+    previousType: defaultProps.getType(list[1], 1, list),
+    PreviousComp: defaultProps.map[2],
+    nextData: list[3],
+    nextContext: {},
+    nextKey: defaultProps.getKey(list[3], 3, list),
+    nextType: defaultProps.getType(list[3], 3, list),
+    NextComp: defaultProps.map[1],
+  })
+})
+
+test('should provide detailed data to mapDataToContext', () => {
+  const { list } = defaultProps
+  const tree = renderer.create(h(MapToComponents, defaultProps))
+
+  expect(defaultProps.mapDataToContext.withMapDataToProps).toHaveBeenCalledWith(
+    {
+      list,
+      keys: list.map(defaultProps.getKey),
+      types: list.map(defaultProps.getType),
+      comps: [
+        defaultProps.map[1],
+        defaultProps.map[2],
+        defaultProps.map.withMapDataToProps,
+        defaultProps.map[1],
+      ],
+      contexts: [],
+      map: defaultProps.map,
+      index: 2,
+      data: list[2],
+      key: defaultProps.getKey(list[2], 2, list),
+      type: defaultProps.getType(list[2], 2, list),
+      Comp: defaultProps.map.withMapDataToProps,
+      previousData: list[1],
+      previousKey: defaultProps.getKey(list[1], 1, list),
+      previousType: defaultProps.getType(list[1], 1, list),
+      PreviousComp: defaultProps.map[2],
+      nextData: list[3],
+      nextKey: defaultProps.getKey(list[3], 3, list),
+      nextType: defaultProps.getType(list[3], 3, list),
+      NextComp: defaultProps.map[1],
+    },
+  )
 })
 
 test('should render default mapping if mapping is not available', () => {
   const tree = renderer.create(
-    <MapToComponents
-      {...defaultProps}
-      list={[1, 3]}
-      default={({ data }) => `default for ${data}`}
-    />,
+    h(MapToComponents, {
+      ...defaultProps,
+      list: [1, 3],
+      default: () => 'default',
+    }),
   )
 
-  expect(tree.toJSON()).toEqual(['Type 1', 'default for 3'])
+  expect(tree.toJSON()).toEqual(['Type 1', 'default'])
 })
 
 test('should throw if component mapping is not available and no default is provided', () => {
   expect(() => {
     renderer
-      .create(<MapToComponents {...defaultProps} list={[1, 3]} />)
-      .toThrowError('Could not find a component mapping')
+      .create(h(MapToComponents, { ...defaultProps, list: [1, 3] }))
+      .toThrowError('could not find a component mapping')
   })
 })
