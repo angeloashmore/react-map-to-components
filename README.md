@@ -48,8 +48,8 @@ const App = () => (
 )
 ```
 
-In this example, `list` is an array of objects. `MapToComponents` will render a
-list of components using that list by performing the following:
+In this example, `MapToComponents` will render a list of components using
+`list` by performing the following:
 
 1. For each item in the list, get a key using `getKey`. `getKey` should return
    a unique value for each item in the list, such an an ID or UUID. This value
@@ -67,7 +67,7 @@ list of components using that list by performing the following:
 
 Something like the following would be rendered by `MapToComponents`:
 
-```js
+```jsx
 ;[<Hero key={1} />, <CallToAction key={2} />, <Footer foo="bar" key={3} />]
 ```
 
