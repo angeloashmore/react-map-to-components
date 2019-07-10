@@ -61,6 +61,8 @@ by performing the following:
    each item. The component used is determined by the type and component
    key-value mapping in `map`.
 
+Something like the following would be rendered by `MapToComponents`:
+
 ```jsx
 const App = [
   <Hero key={1} />,
@@ -72,10 +74,10 @@ const App = [
 ## Providing props to components
 
 In the previous example, notice that an item with type `FooterBlock` would
-render `Footer` with the prop `foo="bar"`. By creating a new function component
-in `map`, you can provide default props to your components. This is in contrast
-to just passing a reference to a component, as is done with `Hero` and
-`CallToAction`.
+render `<Footer>` with the prop `foo="bar"`. By creating a new function
+component in `map`, you can provide default props to your components. This is in
+contrast to just passing a reference to a component, as is done with `<Hero>`
+and `<CallToAction>`.
 
 By default, no props **except `key`** are passed to the components.
 
@@ -107,11 +109,11 @@ an object of props to provide to the type's component.
 />
 ```
 
-In the above example, the `Hero` component would receive a `text` prop with the
-value `data.text`, where `data` is the element in the list that maps to the
+In the above example, the `<Hero>` component would receive a `text` prop with
+the value `data.text`, where `data` is the element in the list that maps to the
 `HeroBlock` type.
 
-Likewise, `CallToAction` would receive a `buttonText` prop, and `Footer` would
+Likewise, `<CallToAction>` would receive a `buttonText` prop, and `Footer` would
 receive both `foo` and `year` props.
 
 Each function in `mapDataToProps` has access to the current element, data about
@@ -171,37 +173,37 @@ their only argument with the following properties:
 
 #### General
 
-- **`list`**: List of elements.
-- **`keys`**: List of keys for each element in `list`.
-- **`types`**: List of types for each element in `list`.
-- **`comps`**: List of components for each element in `list`.
-- **`contexts`**: List of context values for each element in `list`.
-- **`map`**: Mapping of types to React components.
+- **`list`**: (Array) List of elements.
+- **`keys`**: (Array) List of keys for each element in `list`.
+- **`types`**: (Array) List of types for each element in `list`.
+- **`comps`**: (Array) List of components for each element in `list`.
+- **`contexts`**: (Array) List of context values for each element in `list`.
+- **`map`**: (Object) Mapping of types to React components.
 
 #### Element
 
-- **`data`**: The current element.
-- **`index`**: The index for the current element.
-- **`context`**: The context for the current element.
-- **`key`**: The key for the current element.
-- **`type`**: The type for the current element.
-- **`Comp`**: The component for the current element.
+- **`data`**: (Any) The current element.
+- **`index`**: (Integer) The index for the current element.
+- **`context`**: (Object) The context for the current element.
+- **`key`**: (Any) The key for the current element.
+- **`type`**: (String) The type for the current element.
+- **`Comp`**: (Component) The component for the current element.
 
 #### Previous element
 
-- **`previousData`**: The previous element.
-- **`previousContext`**: The context for the previous element.
-- **`previousKey`**: The key for the previous element.
-- **`previousType`**: The type for the previous element.
-- **`PreviousComp`**: The component for the previous element.
+- **`previousData`**: (Any) The previous element.
+- **`previousContext`**: (Object) The context for the previous element.
+- **`previousKey`**: (Any) The key for the previous element.
+- **`previousType`**: (String) The type for the previous element.
+- **`PreviousComp`**: (Component) The component for the previous element.
 
 #### Next element
 
-- **`nextData`**: The next element.
-- **`nextContext`**: The context for the next element.
-- **`nextKey`**: The key for the next element.
-- **`nextType`**: The type for the next element.
-- **`NextComp`**: The component for the next element.
+- **`nextData`**: (Any) The next element.
+- **`nextContext`**: (Object) The context for the next element.
+- **`nextKey`**: (Any) The key for the next element.
+- **`nextType`**: (String) The type for the next element.
+- **`NextComp`**: (Component) The component for the next element.
 
 ### mapDataToContext
 
