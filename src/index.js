@@ -11,6 +11,7 @@ const MapToComponents = React.memo(
     default: defaultMapping = ({ type }) => {
       throw new Error(`Could not find a component mapping for type "${type}"`)
     },
+    ...extraProps
   }) => {
     const keys = list.map(getKey)
     const types = list.map(getType)
@@ -40,6 +41,7 @@ const MapToComponents = React.memo(
       nextKey: keys[index + 1],
       nextType: types[index + 1],
       NextComp: comps[index + 1],
+      ...extraProps,
     })
 
     contexts = list.map((_, index) => {

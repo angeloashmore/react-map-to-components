@@ -179,6 +179,8 @@ their only argument with the following properties:
 - **`comps`**: (Array) List of components for each element in `list`.
 - **`contexts`**: (Array) List of context values for each element in `list`.
 - **`map`**: (Object) Mapping of types to React components.
+- **`...rest`**: (Any) All props passed to `MapToComponents` that are not listed
+  in `MapToComponents`'s list of props.
 
 #### Element
 

@@ -17,6 +17,7 @@ const defaultProps = {
   mapDataToProps: {
     withMapDataToProps: jest.fn().mockReturnValue({ mappedData: true }),
   },
+  foo: 'bar',
 }
 
 beforeEach(() => jest.clearAllMocks())
@@ -110,6 +111,7 @@ test('should provide detailed data to mapDataToProps', () => {
     nextKey: defaultProps.getKey(list[3], 3, list),
     nextType: defaultProps.getType(list[3], 3, list),
     NextComp: defaultProps.map[1],
+    foo: defaultProps.foo,
   })
 })
 
@@ -143,6 +145,7 @@ test('should provide detailed data to mapDataToContext', () => {
       nextKey: defaultProps.getKey(list[3], 3, list),
       nextType: defaultProps.getType(list[3], 3, list),
       NextComp: defaultProps.map[1],
+      foo: defaultProps.foo,
     },
   )
 })
