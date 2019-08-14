@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-next.0](https://github.com/angeloashmore/react-map-to-components/compare/v1.0.1...v1.1.0-next.0) (2019-08-14)
+
+
+### Bug Fixes
+
+* update dependencies ([5f2cb92](https://github.com/angeloashmore/react-map-to-components/commit/5f2cb92))
+
+
+### Features
+
+* memoize data ([f803d68](https://github.com/angeloashmore/react-map-to-components/commit/f803d68))
+
 ### [1.0.1](https://github.com/angeloashmore/react-map-to-components/compare/v1.0.0...v1.0.1) (2019-07-11)
 
 
