@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback } from 'react'
 
 const MapToComponents = ({
   getKey,
@@ -75,58 +75,6 @@ const MapToComponents = ({
       }),
     [gatherDataForMapDataToProps, list, mapDataToProps, types],
   )
-
-  useEffect(() => {
-    console.count('meta: ')
-  }, [meta])
-
-  useEffect(() => {
-    console.count('defaultMapping: ')
-  }, [defaultMapping])
-
-  useEffect(() => {
-    console.count('map: ')
-  }, [map])
-
-  useEffect(() => {
-    console.count('contexts: ')
-  }, [contexts])
-
-  useEffect(() => {
-    console.count('list: ')
-  }, [list])
-
-  useEffect(() => {
-    console.count('mapDataToProps: ')
-  }, [mapDataToProps])
-
-  useEffect(() => {
-    console.count('mapDataToContext: ')
-  }, [mapDataToProps])
-
-  useEffect(() => {
-    console.count('types: ')
-  }, [types])
-
-  useEffect(() => {
-    console.count('gatherData: ')
-  }, [gatherDataForMapDataToProps])
-
-  useEffect(() => {
-    console.count('gatherDataForMapDataToProps: ')
-  }, [gatherDataForMapDataToProps])
-
-  useEffect(() => {
-    console.count('comps: ')
-  }, [comps])
-
-  useEffect(() => {
-    console.count('keys: ')
-  }, [keys])
-
-  useEffect(() => {
-    console.count('props: ')
-  }, [props])
 
   return props.map((mappedProps, index) =>
     React.createElement(comps[index], { key: keys[index], ...mappedProps }),
