@@ -61,9 +61,10 @@ test('should render list using components from map', () => {
   ])
 })
 
-test('should provide only key prop to mapped component by default', () => {
+test('should provide no props to mapped component by default', () => {
+  let tree
   act(() => {
-    renderer.create(
+    tree = renderer.create(
       h(MapToComponents, {
         ...defaultProps,
         mapDataToContext: undefined,
@@ -72,23 +73,21 @@ test('should provide only key prop to mapped component by default', () => {
     )
   })
 
-  expect(defaultProps.map[1]).toHaveBeenNthCalledWith(1, { key: 0 })
-  expect(defaultProps.map[2]).toHaveBeenNthCalledWith(1, { key: 1 })
-  expect(defaultProps.map.withMapDataToProps).toHaveBeenNthCalledWith(1, {
-    key: 2,
-  })
-  expect(defaultProps.map[1]).toHaveBeenNthCalledWith(2, { key: 3 })
+  expect(tree.toJSON()).toEqual([
+    'Type 1',
+    'Type 2',
+    'withMapDataToProps',
+    'Type 1',
+  ])
 })
 
 test('should provide mapped props to mapped component', () => {
+  let tree
   act(() => {
-    renderer.create(h(MapToComponents, defaultProps))
+    tree = renderer.create(h(MapToComponents, defaultProps))
   })
 
-  expect(defaultProps.map.withMapDataToProps).toHaveBeenCalledWith({
-    key: 2,
-    mappedData: true,
-  })
+  expect(tree.toTree().rendered[2].props).toEqual({ mappedData: true })
 })
 
 test('should provide detailed data to mapDataToProps', () => {
