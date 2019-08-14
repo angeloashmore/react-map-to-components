@@ -1,65 +1,84 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 
-const MapToComponents = React.memo(
-  ({
-    getKey,
-    getType,
-    list = [],
-    map = {},
-    mapDataToContext = {},
-    mapDataToProps = {},
-    default: defaultMapping = ({ type }) => {
-      throw new Error(`Could not find a component mapping for type "${type}"`)
-    },
-    ...extraProps
-  }) => {
-    const keys = list.map(getKey)
-    const types = list.map(getType)
-    const comps = types.map(type => map[type] || defaultMapping)
-    let contexts = []
+const MapToComponents = ({
+  getKey,
+  getType,
+  list,
+  map,
+  meta,
+  mapDataToContext = {},
+  mapDataToProps = {},
+  default: defaultMapping = ({ type }) => {
+    throw new Error(`Could not find a component mapping for type "${type}"`)
+  },
+}) => {
+  const keys = useMemo(() => list.map(getKey), [list, getKey])
+  const types = useMemo(() => list.map(getType), [list, getType])
+  const comps = useMemo(() => types.map(type => map[type] || defaultMapping), [
+    types,
+    map,
+    defaultMapping,
+  ])
 
-    const gatherData = index => ({
+  const gatherData = useCallback(
+    index => ({
       list,
       keys,
       types,
       comps,
-      contexts,
       map,
+      meta,
       index,
       data: list[index],
-      context: contexts[index],
       key: keys[index],
       type: types[index],
       Comp: comps[index],
       previousData: list[index - 1],
-      previousContext: contexts[index - 1],
       previousKey: keys[index - 1],
       previousType: types[index - 1],
       PreviousComp: comps[index - 1],
       nextData: list[index + 1],
-      nextContext: contexts[index + 1],
       nextKey: keys[index + 1],
       nextType: types[index + 1],
       NextComp: comps[index + 1],
-      ...extraProps,
-    })
+    }),
+    [comps, keys, types, meta, list, map],
+  )
 
-    contexts = list.map((_, index) => {
-      const fn = mapDataToContext[types[index]]
+  const contexts = useMemo(
+    () =>
+      list.map((_, index) => {
+        const fn = mapDataToContext[types[index]]
 
-      return fn ? fn(gatherData(index)) : {}
-    })
+        return fn ? fn(gatherData(index)) : {}
+      }),
+    [gatherData, list, mapDataToContext, types],
+  )
 
-    const props = list.map((_, index) => {
-      const fn = mapDataToProps[types[index]]
+  const gatherDataForMapDataToProps = useCallback(
+    index => ({
+      ...gatherData(index),
+      contexts,
+      context: contexts[index],
+      previousContext: contexts[index - 1],
+      nextContext: contexts[index + 1],
+    }),
+    [gatherData, contexts],
+  )
 
-      return fn ? fn(gatherData(index)) : {}
-    })
+  const props = useMemo(
+    () =>
+      list.map((_, index) => {
+        const fn = mapDataToProps[types[index]]
 
-    return props.map((mappedProps, index) =>
-      comps[index]({ key: keys[index], ...mappedProps }),
-    )
-  },
-)
+        return fn ? fn(gatherDataForMapDataToProps(index)) : {}
+      }),
+    [gatherDataForMapDataToProps, list, mapDataToProps, types],
+  )
+
+  return props.map((mappedProps, index) =>
+    React.createElement(comps[index], { key: keys[index], ...mappedProps }),
+  )
+}
 
 export default MapToComponents
