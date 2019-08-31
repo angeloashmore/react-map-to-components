@@ -11,6 +11,8 @@ const MapToComponents = ({
   default: defaultMapping = ({ type }) => {
     throw new Error(`Could not find a component mapping for type "${type}"`)
   },
+  defaultMapDataToContext,
+  defaultMapDataToProps,
 }) => {
   const keys = useMemo(() => list.map(getKey), [list, getKey])
   const types = useMemo(() => list.map(getType), [list, getType])
@@ -48,7 +50,7 @@ const MapToComponents = ({
   const contexts = useMemo(
     () =>
       list.map((_, index) => {
-        const fn = mapDataToContext[types[index]]
+        const fn = mapDataToContext[types[index]] || defaultMapDataToContext
 
         return fn ? fn(gatherData(index)) : {}
       }),
@@ -69,7 +71,7 @@ const MapToComponents = ({
   const props = useMemo(
     () =>
       list.map((_, index) => {
-        const fn = mapDataToProps[types[index]]
+        const fn = mapDataToProps[types[index]] || defaultMapDataToProps
 
         return fn ? fn(gatherDataForMapDataToProps(index)) : {}
       }),

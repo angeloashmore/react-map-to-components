@@ -159,17 +159,21 @@ the element such as index, and data about sibling elements. See the
   types.
 - **`map`**: (Object): Object mapping a data type to a React component to be
   rendered.
-- **`mapDataToProps`**: (Object) Object mapping a data type to a function
-  returning props for the component to be rendered.
-- **`mapDataToContext`**: (Object) Object mapping a data type to a function
-  returning contextual data for the element.
 - **`default`**: (Component) Component to be rendered if an element type is not
   defined in `map`.
+- **`mapDataToProps`**: (Object) Object mapping a data type to a function
+  returning props for the component to be rendered.
+- **`defaultMapDataToProps`**: (Function) Function used to determine props for a
+  type not defined in `mapDataToProps`.
+- **`mapDataToContext`**: (Object) Object mapping a data type to a function
+  returning contextual data for the element.
+- **`defaultMapDataToContext`**: (Function) Function used to determine context
+  for a type not defined in `mapDataToProps`.
 
 ### mapDataToProps
 
-Functions in the object passed to `mapDataToProps` are provided an object as
-their only argument with the following properties:
+Functions in the object passed to `mapDataToProps` and `defaultMapDataToProps`
+are provided an object as their only argument with the following properties:
 
 #### General
 
