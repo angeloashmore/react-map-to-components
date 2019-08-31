@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/angeloashmore/react-map-to-components/compare/v1.1.0-next.0...v1.1.0) (2019-08-31)
+
+
+### Features
+
+* add defaultMapDataToProps and defaultMapDataToContext ([5ab8b35](https://github.com/angeloashmore/react-map-to-components/commit/5ab8b35))
+
 ## [1.1.0-next.0](https://github.com/angeloashmore/react-map-to-components/compare/v1.0.1...v1.1.0-next.0) (2019-08-14)
 
 
