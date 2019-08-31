@@ -163,6 +163,8 @@ the element such as index, and data about sibling elements. See the
   returning props for the component to be rendered.
 - **`mapDataToContext`**: (Object) Object mapping a data type to a function
   returning contextual data for the element.
+- **`meta`**: (Any) Arbitrary data that is made available to functions in
+  `mapDataToProps` and `mapDataToContext`.
 - **`default`**: (Component) Component to be rendered if an element type is not
   defined in `map`.
 - **`defaultMapDataToProps`**: (Function) Function used to determine props for a
@@ -183,8 +185,7 @@ are provided an object as their only argument with the following properties:
 - **`comps`**: (Array) List of components for each element in `list`.
 - **`contexts`**: (Array) List of context values for each element in `list`.
 - **`map`**: (Object) Mapping of types to React components.
-- **`...rest`**: (Any) All props passed to `MapToComponents` that are not listed
-  in `MapToComponents`'s list of props.
+- **`meta`**: (Any) Data provided to the `meta` prop.
 
 #### Element
 
