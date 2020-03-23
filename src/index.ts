@@ -8,7 +8,14 @@ const DefaultComp: React.FC<{ type: string }> = ({ type }) => {
  * Collection of data about an individual list item and its surrounding
  * context.
  */
-export interface Ctx<ComponentMap, DataElement, Meta> {
+export interface Ctx<
+  ComponentMap extends Record<string, React.ComponentType> = Record<
+    string,
+    React.ComponentType
+  >,
+  DataElement = any,
+  Meta = any,
+> {
   /** List of elements. */
   list: DataElement[]
   /** List of keys for each element in `list`. */
@@ -53,8 +60,15 @@ export interface Ctx<ComponentMap, DataElement, Meta> {
  * Collection of data about an individual list item and its surrounding
  * context. Includes context properties from `mapDataToContext`.
  */
-export interface CtxWithContext<ComponentMap, DataElement, Meta, Context>
-  extends Ctx<ComponentMap, DataElement, Meta> {
+export interface CtxWithContext<
+  ComponentMap extends Record<string, React.ComponentType> = Record<
+    string,
+    React.ComponentType
+  >,
+  DataElement = any,
+  Meta = any,
+  Context = any
+> extends Ctx<ComponentMap, DataElement, Meta> {
   /** List of context values for each element in `list`. */
   contexts: (Context | undefined)[]
   /** Context for the current element. */
@@ -69,20 +83,29 @@ export interface CtxWithContext<ComponentMap, DataElement, Meta, Context>
  * Function mapping an element in `list` and its surrounding context to
  * contextual data for the element's `mapDataToContext` function.
  */
-export type MapDataToContextFn<ComponentMap, DataElement, Meta, Context> = (
-  ctx: Ctx<ComponentMap, DataElement, Meta>,
-) => Context | undefined
+export type MapDataToContextFn<
+  ComponentMap extends Record<string, React.ComponentType> = Record<
+    string,
+    React.ComponentType
+  >,
+  DataElement = any,
+  Meta = any,
+  Context = any
+> = (ctx: Ctx<ComponentMap, DataElement, Meta>) => Context | undefined
 
 /**
  * Function mapping an element in `list` and its surrounding context to props
  * for the component to be rendered.
  */
 export type MapDataToPropsFn<
-  ComponentMap,
-  DataElement,
-  Meta,
-  Context,
-  Props
+  ComponentMap extends Record<string, React.ComponentType> = Record<
+    string,
+    React.ComponentType
+  >,
+  DataElement = any,
+  Meta = any,
+  Context = any,
+  Props = any
 > = (
   ctx: CtxWithContext<ComponentMap, DataElement, Meta, Context>,
 ) => Props | undefined
@@ -150,9 +173,9 @@ export interface MapToComponentsProps<
 }
 
 const MapToComponents = <
-  ComponentMap extends Record<string, React.ComponentType>,
-  DataElement,
   Meta,
+  DataElement,
+  ComponentMap extends Record<string, React.ComponentType>,
   Context,
   Props
 >(
