@@ -10,7 +10,7 @@ import MapToComponents, { MapToComponentsProps } from '../src'
 const defaultProps = {
   getKey: jest.fn().mockImplementation((_, i) => i),
   getType: jest.fn().mockImplementation((x) => x),
-  list: [1, 2, 'withMapDataToProps', 1],
+  list: [1, 2, 'withMapDataToProps', 1, { foo: 'bar' }],
   map: {
     1: (props) => <div {...props}>Type 1</div>,
     2: (props) => <div {...props}>Type 2</div>,

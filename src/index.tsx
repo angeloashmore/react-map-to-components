@@ -4,47 +4,110 @@ const DefaultComp: React.FC<{ type: string }> = ({ type }) => {
   throw new Error(`Could not find a component mapping for type "${type}"`)
 }
 
-export type MapDataToContextFn<T, C> = (ctx: { data: T }) => C
-export type MapDataToPropsFn<T, C, P> = (ctx: { data: T; context: C }) => P
+interface Ctx<ComponentMap, DataElement, Meta> {
+  list: DataElement[]
+  keys: React.Key[]
+  types: (keyof ComponentMap)[]
+  comps: React.ComponentType[]
+  map: ComponentMap
+  meta: Meta
+  index: number
+  data: DataElement
+  key: React.Key
+  type: keyof ComponentMap
+  Comp: React.ComponentType
+  previousData?: DataElement
+  previousKey?: React.Key
+  previousType?: keyof ComponentMap
+  PreviousComp?: React.ComponentType
+  nextData?: DataElement
+  nextKey?: React.Key
+  nextType?: keyof ComponentMap
+  NextComp?: React.ComponentType
+}
+
+interface CtxWithContext<ComponentMap, DataElement, Context, Meta>
+  extends Ctx<ComponentMap, DataElement, Meta> {
+  contexts: Context[]
+  context: Context
+  previousContext?: Context
+  nextContext?: Context
+}
+
+export type MapDataToContextFn<ComponentMap, DataElement, Context, Meta> = (
+  ctx: Ctx<ComponentMap, DataElement, Meta>,
+) => Context
+
+export type MapDataToPropsFn<
+  ComponentMap,
+  DataElement,
+  Context,
+  Props,
+  Meta
+> = (ctx: CtxWithContext<ComponentMap, DataElement, Context, Meta>) => Props
 
 export interface MapToComponentsProps<
   ComponentMap extends Record<string, React.ComponentType> = Record<
     string,
     React.ComponentType
   >,
-  T = any,
-  C = any,
-  P = any
+  DataElement = any,
+  Context = any,
+  Props = any,
+  Meta = any
 > {
   getKey: <T>(data: T, index: number, list: T[]) => React.Key
   getType: <T>(data: T, index: number, list: T[]) => keyof ComponentMap
-  list?: T[]
+  list?: DataElement[]
   map: ComponentMap
-  meta?: any
+  meta?: Meta
   mapDataToContext?: Partial<
-    Record<keyof ComponentMap, MapDataToContextFn<T, C>>
+    Record<
+      keyof ComponentMap,
+      MapDataToContextFn<ComponentMap, DataElement, Context, Meta>
+    >
   >
   mapDataToProps?: Partial<
-    Record<keyof ComponentMap, MapDataToPropsFn<T, C, P>>
+    Record<
+      keyof ComponentMap,
+      MapDataToPropsFn<ComponentMap, DataElement, Context, Props, Meta>
+    >
   >
   default?: React.ComponentType
-  defaultMapDataToContext?: MapDataToContextFn<T, C>
-  defaultMapDataToProps?: MapDataToPropsFn<T, C, P>
+  defaultMapDataToContext?: MapDataToContextFn<
+    ComponentMap,
+    DataElement,
+    Context,
+    Meta
+  >
+  defaultMapDataToProps?: MapDataToPropsFn<
+    ComponentMap,
+    DataElement,
+    Context,
+    Props,
+    Meta
+  >
 }
 
-const MapToComponents = <T extends Record<string, React.ComponentType>>({
-  getKey,
-  getType,
-  list = [],
-  map,
-  meta,
-  mapDataToContext = {},
-  mapDataToProps = {},
-  // @ts-ignore
-  default: defaultMapping = DefaultComp,
-  defaultMapDataToContext,
-  defaultMapDataToProps,
-}: MapToComponentsProps<T>): React.ReactElement => {
+const MapToComponents = <
+  ComponentMap extends Record<string, React.ComponentType>,
+  DataElement
+>(
+  props: MapToComponentsProps<ComponentMap, DataElement>,
+): React.ReactElement => {
+  const {
+    getKey,
+    getType,
+    list = [],
+    map,
+    meta,
+    mapDataToContext,
+    mapDataToProps,
+    default: defaultMapping = DefaultComp,
+    defaultMapDataToContext,
+    defaultMapDataToProps,
+  } = props
+
   const keys = useMemo(() => list.map(getKey), [list, getKey])
   const types = useMemo(() => list.map(getType), [list, getType])
   const comps = useMemo(
@@ -80,7 +143,7 @@ const MapToComponents = <T extends Record<string, React.ComponentType>>({
   const contexts = useMemo(
     () =>
       list.map((_, index) => {
-        const fn = mapDataToContext[types[index]] || defaultMapDataToContext
+        const fn = mapDataToContext?.[types[index]] || defaultMapDataToContext
 
         return fn ? fn(gatherData(index)) : {}
       }),
@@ -98,10 +161,10 @@ const MapToComponents = <T extends Record<string, React.ComponentType>>({
     [gatherData, contexts],
   )
 
-  const props = useMemo(
+  const propsList = useMemo(
     () =>
       list.map((_, index) => {
-        const fn = mapDataToProps[types[index]] || defaultMapDataToProps
+        const fn = mapDataToProps?.[types[index]] || defaultMapDataToProps
 
         return fn ? fn(gatherDataForMapDataToProps(index)) : {}
       }),
@@ -110,7 +173,7 @@ const MapToComponents = <T extends Record<string, React.ComponentType>>({
 
   return (
     <>
-      {props.map((mappedProps, index) =>
+      {propsList.map((mappedProps, index) =>
         React.createElement(comps[index], { key: keys[index], ...mappedProps }),
       )}
     </>
