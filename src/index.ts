@@ -178,12 +178,12 @@ const MapToComponents = <
     [gatherDataForMapDataToProps, list, mapDataToProps, types],
   )
 
-  return (
-    <>
-      {propsList.map((mappedProps, index) =>
-        React.createElement(comps[index], { key: keys[index], ...mappedProps }),
-      )}
-    </>
+  return React.createElement(
+    React.Fragment,
+    null,
+    propsList.map((mappedProps, index) =>
+      React.createElement(comps[index], { key: keys[index], ...mappedProps }),
+    ),
   )
 }
 
