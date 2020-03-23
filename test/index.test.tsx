@@ -1,9 +1,5 @@
 import React from 'react'
-import renderer, {
-  act,
-  ReactTestRenderer,
-  // ReactTestRendererJSON,
-} from 'react-test-renderer'
+import renderer, { act, ReactTestRenderer } from 'react-test-renderer'
 
 import MapToComponents, { MapToComponentsProps } from '../src'
 
