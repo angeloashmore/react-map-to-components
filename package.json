@@ -48,7 +48,7 @@
     "typescript": "^3.8.3"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16.8"
   },
   "prettier": {
     "semi": false,
