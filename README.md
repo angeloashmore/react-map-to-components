@@ -6,8 +6,8 @@ This component is especially useful when processing data from an external source
 with a flexible nature, such as [Prismic Slices][prismic-slices] and [WordPress
 ACF Flexible Content][wordpress-acf-flexible-content].
 
-[![npm version](https://flat.badgen.net/npm/v/react-map-to-components)](https://www.npmjs.com/package/react-map-to-components)
-[![Build Status](https://flat.badgen.net/travis/angeloashmore/react-map-to-components)](https://travis-ci.com/angeloashmore/react-map-to-components)
+[![npm version](https://img.shields.io/npm/v/react-map-to-components?style=flat-square)](https://www.npmjs.com/package/react-map-to-components)
+[![Build Status](https://img.shields.io/github/workflow/status/angeloashmore/react-map-to-components/Test?style=flat-square)](https://github.com/angeloashmore/react-map-to-components/actions?query=workflow%3ATest)
 
 ```sh
 npm install --save react-map-to-components
@@ -30,13 +30,13 @@ const list = [
 
 const App = () => (
   <MapToComponents
-    getKey={x => x.id}
-    getType={x => x.type}
+    getKey={(x) => x.id}
+    getType={(x) => x.type}
     list={list}
     map={{
       HeroBlock: Hero,
       CallToActionBlock: CallToAction,
-      FooterBlock: props => <Footer foo="bar" {...props} />,
+      FooterBlock: (props) => <Footer foo="bar" {...props} />,
     }}
   />
 )
@@ -93,13 +93,13 @@ an object of props to provide to the type's component.
 
 ```jsx
 <MapToComponents
-  getKey={x => x.id}
-  getType={x => x.type}
+  getKey={(x) => x.id}
+  getType={(x) => x.type}
   list={list}
   map={{
     HeroBlock: Hero,
     CallToActionBlock: CallToAction,
-    FooterBlock: props => <Footer foo="bar" {...props} />,
+    FooterBlock: (props) => <Footer foo="bar" {...props} />,
   }}
   mapDataToProps={{
     HeroBlock: ({ data }) => ({ text: data.text }),
