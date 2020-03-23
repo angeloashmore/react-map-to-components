@@ -14,7 +14,7 @@ export interface Ctx<
     React.ComponentType
   >,
   DataElement = any,
-  Meta = any,
+  Meta = any
 > {
   /** List of elements. */
   list: DataElement[]
@@ -173,11 +173,14 @@ export interface MapToComponentsProps<
 }
 
 const MapToComponents = <
-  Meta,
-  DataElement,
-  ComponentMap extends Record<string, React.ComponentType>,
-  Context,
-  Props
+  Meta = any,
+  ComponentMap extends Record<string, React.ComponentType> = Record<
+    string,
+    React.ComponentType
+  >,
+  DataElement = any,
+  Context = any,
+  Props = any
 >(
   props: MapToComponentsProps<ComponentMap, DataElement, Meta, Context, Props>,
 ): React.ReactElement => {
