@@ -172,7 +172,7 @@ export interface MapToComponentsProps<
   >
 }
 
-const MapToComponents = <
+export const MapToComponents = <
   Meta = any,
   ComponentMap extends Record<string, React.ComponentType> = Record<
     string,
@@ -236,7 +236,7 @@ const MapToComponents = <
 
         return fn ? fn(gatherData(index)) : undefined
       }),
-    [gatherData, list, mapDataToContext, types],
+    [gatherData, list, mapDataToContext, types, defaultMapDataToContext],
   )
 
   const gatherDataForMapDataToProps = useCallback(
@@ -259,7 +259,13 @@ const MapToComponents = <
 
         return fn ? fn(gatherDataForMapDataToProps(index)) : undefined
       }),
-    [gatherDataForMapDataToProps, list, mapDataToProps, types],
+    [
+      gatherDataForMapDataToProps,
+      list,
+      mapDataToProps,
+      types,
+      defaultMapDataToProps,
+    ],
   )
 
   return React.createElement(

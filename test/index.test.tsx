@@ -1,7 +1,7 @@
 import React from 'react'
 import renderer, { act, ReactTestRenderer } from 'react-test-renderer'
 
-import MapToComponents, { MapToComponentsProps } from '../src'
+import { MapToComponents, MapToComponentsProps } from '../src'
 
 const defaultProps = {
   getKey: jest.fn().mockImplementation((_, i) => i),
