@@ -1,112 +1,59 @@
 import React, { useMemo, useCallback } from 'react'
 
-interface Ctx<ComponentMap, DataElement, Meta> {
-  list: DataElement[]
-  keys: React.Key[]
-  types: keyof ComponentMap[]
-  comps: React.ComponentType[]
-  map: ComponentMap
-  meta: Meta
-  index: number
-  data: DataElement
-  key: React.Key
-  type: keyof ComponentMap
-  Comp: React.ComponentType
-  previousData?: DataElement
-  previousKey?: React.Key
-  previousType?: keyof ComponentMap
-  PreviousComp?: React.ComponentType
-  nextData?: DataElement
-  nextKey?: React.Key
-  nextType?: keyof ComponentMap
-  NextComp?: React.ComponentType
-}
-
-interface CtxWithContext<ComponentMap, DataElement, Context, Meta>
-  extends Ctx<ComponentMap, DataElement, Meta> {
-  contexts: Context[]
-  context: Context
-  previousContext?: Context
-  nextContext?: Context
-}
-
-type MapDataToContextFn<ComponentMap, DataElement, Meta> = (
-  ctx: Ctx<ComponentMap, DataElement, Meta>,
-) => any
-
-type MapDataToPropsFn<
-  ComponentMap,
-  DataElement,
-  Context extends ReturnType<
-    MapDataToContextFn<ComponentMap, DataElement, Meta>
-  >,
-  Meta
-> = (ctx: CtxWithContext<ComponentMap, DataElement, Context, Meta>) => any
-
-interface MapToComponentsProps<ComponentMap, DataElement, Context, Meta> {
-  getKey: (data: DataElement, index: number, list: DataElement[]) => React.Key
-  getType: (
-    data: DataElement,
-    index: number,
-    list: DataElement[],
-  ) => keyof ComponentMap
-  list: DataElement[]
-  map: ComponentMap
-  meta: Meta
-  mapDataToContext: Record<
-    keyof ComponentMap,
-    MapDataToContextFn<ComponentMap, DataElement, Meta>
-  >
-  mapDataToProps: Record<
-    keyof ComponentMap,
-    MapDataToPropsFn<ComponentMap, DataElement, Context, Meta>
-  >
-  default: React.ComponentType
-  defaultMapDataToContext: MapDataToContextFn<ComponentMap, DataElement, Meta>
-  defaultMapDataToProps: MapDataToPropsFn<
-    ComponentMap,
-    DataElement,
-    Context,
-    Meta
-  >
-}
-
 const DefaultComp: React.FC<{ type: string }> = ({ type }) => {
   throw new Error(`Could not find a component mapping for type "${type}"`)
 }
 
-const MapToComponents = <
-  ComponentMap extends Record<string, React.ComponentType>,
-  DataElement,
-  Context,
-  Meta
->({
+export type MapDataToContextFn<T, C> = (ctx: { data: T }) => C
+export type MapDataToPropsFn<T, C, P> = (ctx: { data: T; context: C }) => P
+
+export interface MapToComponentsProps<
+  ComponentMap extends Record<string, React.ComponentType> = Record<
+    string,
+    React.ComponentType
+  >,
+  T = any,
+  C = any,
+  P = any
+> {
+  getKey: <T>(data: T, index: number, list: T[]) => React.Key
+  getType: <T>(data: T, index: number, list: T[]) => keyof ComponentMap
+  list?: T[]
+  map: ComponentMap
+  meta?: any
+  mapDataToContext?: Partial<
+    Record<keyof ComponentMap, MapDataToContextFn<T, C>>
+  >
+  mapDataToProps?: Partial<
+    Record<keyof ComponentMap, MapDataToPropsFn<T, C, P>>
+  >
+  default?: React.ComponentType
+  defaultMapDataToContext?: MapDataToContextFn<T, C>
+  defaultMapDataToProps?: MapDataToPropsFn<T, C, P>
+}
+
+const MapToComponents = <T extends Record<string, React.ComponentType>>({
   getKey,
   getType,
   list = [],
-  map = {},
+  map,
   meta,
-  mapDataToContext,
-  mapDataToProps,
+  mapDataToContext = {},
+  mapDataToProps = {},
+  // @ts-ignore
   default: defaultMapping = DefaultComp,
   defaultMapDataToContext,
   defaultMapDataToProps,
-}: MapToComponentsProps<
-  ComponentMap,
-  DataElement,
-  Context,
-  Meta
->): React.ReactNodeArray => {
+}: MapToComponentsProps<T>): React.ReactElement => {
   const keys = useMemo(() => list.map(getKey), [list, getKey])
   const types = useMemo(() => list.map(getType), [list, getType])
-  const comps = useMemo(() => types.map(type => map[type] || defaultMapping), [
-    types,
-    map,
-    defaultMapping,
-  ])
+  const comps = useMemo(
+    () => types.map((type) => map[type] || defaultMapping),
+    [types, map, defaultMapping],
+  )
 
   const gatherData = useCallback(
-    (index: number): Ctx<ComponentMap, DataElement, Meta> => ({
+    (index: number) => ({
       list,
       keys,
       types,
@@ -130,7 +77,7 @@ const MapToComponents = <
     [comps, keys, types, meta, list, map],
   )
 
-  const contexts: Context[] = useMemo(
+  const contexts = useMemo(
     () =>
       list.map((_, index) => {
         const fn = mapDataToContext[types[index]] || defaultMapDataToContext
@@ -141,9 +88,7 @@ const MapToComponents = <
   )
 
   const gatherDataForMapDataToProps = useCallback(
-    (
-      index: number,
-    ): CtxWithContext<ComponentMap, DataElement, Context, Meta> => ({
+    (index: number) => ({
       ...gatherData(index),
       contexts,
       context: contexts[index],
@@ -163,8 +108,12 @@ const MapToComponents = <
     [gatherDataForMapDataToProps, list, mapDataToProps, types],
   )
 
-  return props.map((mappedProps, index) =>
-    React.createElement(comps[index], { key: keys[index], ...mappedProps }),
+  return (
+    <>
+      {props.map((mappedProps, index) =>
+        React.createElement(comps[index], { key: keys[index], ...mappedProps }),
+      )}
+    </>
   )
 }
 
