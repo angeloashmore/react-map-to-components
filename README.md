@@ -166,7 +166,7 @@ the element such as index, and data about sibling elements. See the
 - **`meta`**: (Any) Arbitrary data that is made available to functions in
   `mapDataToProps` and `mapDataToContext`.
 - **`default`**: (Component) Component to be rendered if an element type is not
-  defined in `map`.
+  defined in `map`. This component always receives `type` as a prop.
 - **`defaultMapDataToProps`**: (Function) Function used to determine props for a
   type not defined in `mapDataToProps`.
 - **`defaultMapDataToContext`**: (Function) Function used to determine context

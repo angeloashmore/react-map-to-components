@@ -232,7 +232,7 @@ export const MapToComponents = <
   const contexts = useMemo(
     () =>
       list.map((_, index) => {
-        const fn = mapDataToContext?.[types[index]] || defaultMapDataToContext
+        const fn = mapDataToContext?.[types[index]] ?? defaultMapDataToContext
 
         return fn ? fn(gatherData(index)) : undefined
       }),
@@ -255,7 +255,7 @@ export const MapToComponents = <
   const propsList = useMemo(
     () =>
       list.map((_, index) => {
-        const fn = mapDataToProps?.[types[index]] || defaultMapDataToProps
+        const fn = mapDataToProps?.[types[index]] ?? defaultMapDataToProps
 
         return fn ? fn(gatherDataForMapDataToProps(index)) : undefined
       }),
@@ -271,9 +271,19 @@ export const MapToComponents = <
   return React.createElement(
     React.Fragment,
     null,
-    propsList.map((mappedProps, index) =>
-      React.createElement(comps[index], { key: keys[index], ...mappedProps }),
-    ),
+    propsList.map((mappedProps, index) => {
+      const comp = comps[index]
+      const type = types[index]
+      const isDefault = comp === defaultMapping
+
+      return React.createElement(
+        comp,
+        Object.assign(
+          { key: keys[index], ...mappedProps },
+          isDefault ? { type } : undefined,
+        ),
+      )
+    }),
   )
 }
 

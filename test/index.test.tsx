@@ -235,7 +235,7 @@ test('should throw if component mapping is not available and no default is provi
     act(() => {
       renderer.create(<MapToComponents {...defaultProps} list={[1, 3]} />)
     })
-  }).toThrow(/could not find a component mapping/i)
+  }).toThrow('Could not find a component mapping for type "3"')
 
   spy.mockRestore()
 })
