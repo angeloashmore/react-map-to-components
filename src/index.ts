@@ -4,40 +4,79 @@ const DefaultComp: React.FC<{ type: string }> = ({ type }) => {
   throw new Error(`Could not find a component mapping for type "${type}"`)
 }
 
+/**
+ * Collection of data about an individual list item and its surrounding
+ * context.
+ */
 export interface Ctx<ComponentMap, DataElement, Meta> {
+  /** List of elements. */
   list: DataElement[]
+  /** List of keys for each element in `list`. */
   keys: React.Key[]
+  /** List of types for each element in `list`. */
   types: (keyof ComponentMap)[]
+  /** List of components for each element in `list`. */
   comps: React.ComponentType[]
+  /** Mapping of types to React components. */
   map: ComponentMap
+  /** Data provided to the `meta` prop. */
   meta?: Meta
+  /** Index of the current element. */
   index: number
+  /** The current element. */
   data: DataElement
+  /** Key of the current element. */
   key: React.Key
+  /** Type of the current element. */
   type: keyof ComponentMap
+  /** Component for the current element. */
   Comp: React.ComponentType
+  /** The previous element. */
   previousData?: DataElement
+  /** Key of the previous element. */
   previousKey?: React.Key
+  /** Type of the previous element. */
   previousType?: keyof ComponentMap
+  /** Component for the previous element. */
   PreviousComp?: React.ComponentType
+  /** The next element. */
   nextData?: DataElement
+  /** Key of the next element. */
   nextKey?: React.Key
+  /** Type of the next element. */
   nextType?: keyof ComponentMap
+  /** Component for the next element. */
   NextComp?: React.ComponentType
 }
 
+/**
+ * Collection of data about an individual list item and its surrounding
+ * context. Includes context properties from `mapDataToContext`.
+ */
 export interface CtxWithContext<ComponentMap, DataElement, Meta, Context>
   extends Ctx<ComponentMap, DataElement, Meta> {
+  /** List of context values for each element in `list`. */
   contexts: (Context | undefined)[]
+  /** Context for the current element. */
   context?: Context
+  /** Context for the previous element. */
   previousContext?: Context
+  /** Context for the next element */
   nextContext?: Context
 }
 
+/**
+ * Function mapping an element in `list` and its surrounding context to
+ * contextual data for the element's `mapDataToContext` function.
+ */
 export type MapDataToContextFn<ComponentMap, DataElement, Meta, Context> = (
   ctx: Ctx<ComponentMap, DataElement, Meta>,
 ) => Context | undefined
 
+/**
+ * Function mapping an element in `list` and its surrounding context to props
+ * for the component to be rendered.
+ */
 export type MapDataToPropsFn<
   ComponentMap,
   DataElement,
@@ -58,30 +97,49 @@ export interface MapToComponentsProps<
   Context = any,
   Props = any
 > {
+  /** Function that maps an element to a unique key. */
   getKey: <T>(data: T, index: number, list: T[]) => React.Key
+  /** Function that maps an element to a type. */
   getType: <T>(data: T, index: number, list: T[]) => keyof ComponentMap
+  /** List of data to map to components. Can contain mixed types. */
   list?: DataElement[]
+  /** Object mapping a data type to a React component to be rendered. */
   map: ComponentMap
+  /**
+   * Arbitrary data that is made available to functions in `mapDataToProps` and
+   * `mapDataToProps`.
+   * */
   meta?: Meta
+  /**
+   * Function mapping an element in `list` and its surrounding context to
+   * contextual data for the element's `mapDataToContext` function.
+   */
   mapDataToContext?: Partial<
     Record<
       keyof ComponentMap,
       MapDataToContextFn<ComponentMap, DataElement, Meta, Context>
     >
   >
+  /**
+   * Function mapping an element in `list` and its surrounding context to props
+   * for the component to be rendered.
+   */
   mapDataToProps?: Partial<
     Record<
       keyof ComponentMap,
       MapDataToPropsFn<ComponentMap, DataElement, Meta, Context, Props>
     >
   >
+  /** Component to be rendered if an element type is not defined in `map`. */
   default?: React.ComponentType
+  /**Function used to determine context for a type not defined in `mapDataToContext`. */
   defaultMapDataToContext?: MapDataToContextFn<
     ComponentMap,
     DataElement,
     Meta,
     Context
   >
+  /** Function used to determine props for a type not defined in `mapDataToProps`. */
   defaultMapDataToProps?: MapDataToPropsFn<
     ComponentMap,
     DataElement,
