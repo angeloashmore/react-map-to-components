@@ -2,17 +2,20 @@
   "name": "react-map-to-components",
   "version": "1.1.0",
   "description": "React component to map a list of data to a component based on its type",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "module": "dist/react-map-to-components.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "NODE_ENV=production rollup -c",
-    "build:watch": "npm run build -- --watch",
-    "format": "prettier --write 'src/**/*.js' 'rollup.config.js' 'README.md'",
-    "prebuild": "rimraf dist",
-    "prepare": "npm run build",
-    "release": "standard-version",
-    "test": "jest",
-    "test:watch": "npm run test -- --watch"
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "release": "standard-version"
   },
   "homepage": "https://github.com/angeloashmore/react-map-to-components",
   "repository": {
@@ -26,30 +29,28 @@
   "author": "Angelo Ashmore",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@commitlint/cli": "^8.1.0",
-    "@commitlint/config-conventional": "^8.1.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.3",
-    "babel-jest": "^24.9.0",
-    "eslint": "^6.3.0",
-    "eslint-plugin-jest": "^22.16.0",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.3",
-    "eslint-plugin-react-hooks": "^2.0.1",
-    "husky": "^3.0.4",
-    "jest": "^24.9.0",
-    "prettier": "^1.18.2",
-    "react": "^16.9.0",
-    "react-test-renderer": "^16.9.0",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.20.3",
-    "rollup-plugin-babel": "4.3.3",
-    "standard-version": "^7.0.0"
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@types/jest": "^25.1.4",
+    "@types/react-test-renderer": "^16.9.2",
+    "husky": "^4.2.3",
+    "prettier": "^2.0.1",
+    "react": "^16.13.1",
+    "react-test-renderer": "^16.13.1",
+    "standard-version": "^7.1.0",
+    "tsdx": "^0.13.0",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
     "react": ">=16"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "proseWrap": "always",
+    "printWidth": 80
   },
   "husky": {
     "hooks": {
