@@ -7,7 +7,7 @@ with a flexible nature, such as [Prismic Slices][prismic-slices] and [WordPress
 ACF Flexible Content][wordpress-acf-flexible-content].
 
 [![npm version](https://img.shields.io/npm/v/react-map-to-components?style=flat-square)](https://www.npmjs.com/package/react-map-to-components)
-[![Build Status](https://img.shields.io/github/workflow/status/angeloashmore/react-map-to-components/Test?style=flat-square)](https://github.com/angeloashmore/react-map-to-components/actions?query=workflow%3ATest)
+[![Build Status](https://img.shields.io/github/workflow/status/angeloashmore/react-map-to-components/CI?style=flat-square)](https://github.com/angeloashmore/react-map-to-components/actions?query=workflow%3ACI)
 
 ```sh
 npm install --save react-map-to-components
