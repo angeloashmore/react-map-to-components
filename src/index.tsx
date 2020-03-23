@@ -4,13 +4,13 @@ const DefaultComp: React.FC<{ type: string }> = ({ type }) => {
   throw new Error(`Could not find a component mapping for type "${type}"`)
 }
 
-interface Ctx<ComponentMap, DataElement, Meta> {
+export interface Ctx<ComponentMap, DataElement, Meta> {
   list: DataElement[]
   keys: React.Key[]
   types: (keyof ComponentMap)[]
   comps: React.ComponentType[]
   map: ComponentMap
-  meta: Meta
+  meta?: Meta
   index: number
   data: DataElement
   key: React.Key
@@ -26,25 +26,27 @@ interface Ctx<ComponentMap, DataElement, Meta> {
   NextComp?: React.ComponentType
 }
 
-interface CtxWithContext<ComponentMap, DataElement, Context, Meta>
+export interface CtxWithContext<ComponentMap, DataElement, Meta, Context>
   extends Ctx<ComponentMap, DataElement, Meta> {
-  contexts: Context[]
-  context: Context
+  contexts: (Context | undefined)[]
+  context?: Context
   previousContext?: Context
   nextContext?: Context
 }
 
-export type MapDataToContextFn<ComponentMap, DataElement, Context, Meta> = (
+export type MapDataToContextFn<ComponentMap, DataElement, Meta, Context> = (
   ctx: Ctx<ComponentMap, DataElement, Meta>,
-) => Context
+) => Context | undefined
 
 export type MapDataToPropsFn<
   ComponentMap,
   DataElement,
+  Meta,
   Context,
-  Props,
-  Meta
-> = (ctx: CtxWithContext<ComponentMap, DataElement, Context, Meta>) => Props
+  Props
+> = (
+  ctx: CtxWithContext<ComponentMap, DataElement, Meta, Context>,
+) => Props | undefined
 
 export interface MapToComponentsProps<
   ComponentMap extends Record<string, React.ComponentType> = Record<
@@ -52,9 +54,9 @@ export interface MapToComponentsProps<
     React.ComponentType
   >,
   DataElement = any,
+  Meta = any,
   Context = any,
-  Props = any,
-  Meta = any
+  Props = any
 > {
   getKey: <T>(data: T, index: number, list: T[]) => React.Key
   getType: <T>(data: T, index: number, list: T[]) => keyof ComponentMap
@@ -64,36 +66,39 @@ export interface MapToComponentsProps<
   mapDataToContext?: Partial<
     Record<
       keyof ComponentMap,
-      MapDataToContextFn<ComponentMap, DataElement, Context, Meta>
+      MapDataToContextFn<ComponentMap, DataElement, Meta, Context>
     >
   >
   mapDataToProps?: Partial<
     Record<
       keyof ComponentMap,
-      MapDataToPropsFn<ComponentMap, DataElement, Context, Props, Meta>
+      MapDataToPropsFn<ComponentMap, DataElement, Meta, Context, Props>
     >
   >
   default?: React.ComponentType
   defaultMapDataToContext?: MapDataToContextFn<
     ComponentMap,
     DataElement,
-    Context,
-    Meta
+    Meta,
+    Context
   >
   defaultMapDataToProps?: MapDataToPropsFn<
     ComponentMap,
     DataElement,
+    Meta,
     Context,
-    Props,
-    Meta
+    Props
   >
 }
 
 const MapToComponents = <
   ComponentMap extends Record<string, React.ComponentType>,
-  DataElement
+  DataElement,
+  Meta,
+  Context,
+  Props
 >(
-  props: MapToComponentsProps<ComponentMap, DataElement>,
+  props: MapToComponentsProps<ComponentMap, DataElement, Meta, Context, Props>,
 ): React.ReactElement => {
   const {
     getKey,
@@ -116,7 +121,7 @@ const MapToComponents = <
   )
 
   const gatherData = useCallback(
-    (index: number) => ({
+    (index: number): Ctx<ComponentMap, DataElement, Meta> => ({
       list,
       keys,
       types,
@@ -145,13 +150,15 @@ const MapToComponents = <
       list.map((_, index) => {
         const fn = mapDataToContext?.[types[index]] || defaultMapDataToContext
 
-        return fn ? fn(gatherData(index)) : {}
+        return fn ? fn(gatherData(index)) : undefined
       }),
     [gatherData, list, mapDataToContext, types],
   )
 
   const gatherDataForMapDataToProps = useCallback(
-    (index: number) => ({
+    (
+      index: number,
+    ): CtxWithContext<ComponentMap, DataElement, Meta, Context> => ({
       ...gatherData(index),
       contexts,
       context: contexts[index],
@@ -166,7 +173,7 @@ const MapToComponents = <
       list.map((_, index) => {
         const fn = mapDataToProps?.[types[index]] || defaultMapDataToProps
 
-        return fn ? fn(gatherDataForMapDataToProps(index)) : {}
+        return fn ? fn(gatherDataForMapDataToProps(index)) : undefined
       }),
     [gatherDataForMapDataToProps, list, mapDataToProps, types],
   )
