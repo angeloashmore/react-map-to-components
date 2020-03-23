@@ -67,6 +67,18 @@ test('should render list using components from map', () => {
   ])
 })
 
+test('should render null if list is undefined', () => {
+  let root: ReactTestRenderer | undefined
+  act(() => {
+    root = renderer.create(
+      <MapToComponents {...defaultProps} list={undefined} />,
+    )
+  })
+  const json = root?.toJSON()
+
+  expect(json).toBeNull()
+})
+
 test('should provide no props to mapped component by default', () => {
   let root: ReactTestRenderer | undefined
   act(() => {
