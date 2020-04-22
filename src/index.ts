@@ -1,6 +1,10 @@
 import React, { useMemo, useCallback } from 'react'
 
-const DefaultComp: React.FC<{ type: string }> = ({ type }) => {
+type DefaultCompProps = {
+  type: string
+}
+
+const DefaultComp = ({ type }: DefaultCompProps) => {
   throw new Error(`Could not find a component mapping for type "${type}"`)
 }
 
@@ -168,7 +172,7 @@ export interface MapToComponentsProps<
     DataElement,
     Meta,
     Context,
-    Props
+    any
   >
 }
 
