@@ -1,16 +1,38 @@
 import * as React from 'react'
-import renderer, { act, ReactTestRenderer } from 'react-test-renderer'
+import { render, screen } from '@testing-library/react'
 
 import { MapToComponents } from '../src'
 
 const defaultProps = {
-  getKey: jest.fn().mockImplementation((_, i) => i),
-  getType: jest.fn().mockImplementation((x) => x),
-  list: [1, 2, 'withMapDataToProps', 1],
+  getKey: jest.fn().mockImplementation((item) => item.id),
+  getType: jest.fn().mockImplementation((item) => item.type),
+  list: [
+    { id: 1, type: 'type1' },
+    { id: 2, type: 'type2' },
+    { id: 3, type: 'withMapDataToProps' },
+  ],
   map: {
-    type1: (props) => <div {...props}>Type 1</div>,
-    type2: (props) => <div {...props}>Type 2</div>,
-    withMapDataToProps: (props) => <div {...props}>withMapDataToProps</div>,
+    type1: (props: any) => (
+      <div
+        data-testid="type1"
+        data-type="type1"
+        data-props={Object.keys(props)}
+      />
+    ),
+    type2: (props: any) => (
+      <div
+        data-testid="type2"
+        data-type="type2"
+        data-props={Object.keys(props)}
+      />
+    ),
+    withMapDataToProps: (props: any) => (
+      <div
+        data-testid="withMapDataToProps"
+        data-type="withMapDataToProps"
+        data-props={Object.keys(props)}
+      />
+    ),
   },
   mapDataToContext: {
     withMapDataToProps: jest.fn().mockReturnValue({ mappedContext: true }),
@@ -19,146 +41,97 @@ const defaultProps = {
     withMapDataToProps: jest.fn().mockReturnValue({ mappedData: true }),
   },
   meta: { foo: 'bar' },
-  thisShouldBeIgnored: 'thisShouldBeIgnored',
 }
 
 beforeEach(() => jest.clearAllMocks())
 
 test('should provide getKey with item, index, and list', () => {
+  render(<MapToComponents {...defaultProps} />)
+
   const { list } = defaultProps
-  act(() => {
-    renderer.create(
-      <MapToComponents
-        {...defaultProps}
-        mapDataToProps={{ type1: (ctx) => ({ foo: ctx.type }) }}
-      />,
-    )
-  })
 
   expect(defaultProps.getKey).toHaveBeenNthCalledWith(1, list[0], 0, list)
   expect(defaultProps.getKey).toHaveBeenNthCalledWith(2, list[1], 1, list)
   expect(defaultProps.getKey).toHaveBeenNthCalledWith(3, list[2], 2, list)
-  expect(defaultProps.getKey).toHaveBeenNthCalledWith(4, list[3], 3, list)
 })
 
 test('should provide getType with item, index, and list', () => {
+  render(<MapToComponents {...defaultProps} />)
+
   const { list } = defaultProps
-  act(() => {
-    renderer.create(<MapToComponents {...defaultProps} />)
-  })
 
   expect(defaultProps.getType).toHaveBeenNthCalledWith(1, list[0], 0, list)
   expect(defaultProps.getType).toHaveBeenNthCalledWith(2, list[1], 1, list)
   expect(defaultProps.getType).toHaveBeenNthCalledWith(3, list[2], 2, list)
-  expect(defaultProps.getType).toHaveBeenNthCalledWith(4, list[3], 3, list)
 })
 
 test('should render list using components from map', () => {
-  let root: ReactTestRenderer | undefined
-  act(() => {
-    root = renderer.create(<MapToComponents {...defaultProps} />)
-  })
-  const json = root?.toJSON()
+  const { container } = render(<MapToComponents {...defaultProps} />)
 
-  expect(json).toEqual([
-    { type: 'div', props: {}, children: ['Type 1'] },
-    { type: 'div', props: {}, children: ['Type 2'] },
-    {
-      type: 'div',
-      props: { mappedData: true },
-      children: ['withMapDataToProps'],
-    },
-    { type: 'div', props: {}, children: ['Type 1'] },
-  ])
+  expect(container.children[0]).toHaveAttribute('data-type', 'type1')
+  expect(container.children[1]).toHaveAttribute('data-type', 'type2')
+  expect(container.children[2]).toHaveAttribute(
+    'data-type',
+    'withMapDataToProps',
+  )
+  expect(screen.getByTestId('withMapDataToProps')).toHaveAttribute(
+    'data-props',
+    'mappedData',
+  )
 })
 
 test('should render null if list is undefined', () => {
-  let root: ReactTestRenderer | undefined
-  act(() => {
-    root = renderer.create(
-      <MapToComponents {...defaultProps} list={undefined} />,
-    )
-  })
-  const json = root?.toJSON()
+  const { container } = render(
+    <MapToComponents {...defaultProps} list={undefined} />,
+  )
 
-  expect(json).toBeNull()
+  expect(container.firstChild).toBeNull()
 })
 
 test('should provide no props to mapped component by default', () => {
-  let root: ReactTestRenderer | undefined
-  act(() => {
-    root = renderer.create(
-      <MapToComponents
-        {...defaultProps}
-        mapDataToContext={undefined}
-        mapDataToProps={undefined}
-      />,
-    )
-  })
-  const json = root?.toJSON()
+  render(<MapToComponents {...defaultProps} mapDataToProps={undefined} />)
 
-  expect(json).toEqual([
-    { type: 'div', props: {}, children: ['Type 1'] },
-    { type: 'div', props: {}, children: ['Type 2'] },
-    { type: 'div', props: {}, children: ['withMapDataToProps'] },
-    { type: 'div', props: {}, children: ['Type 1'] },
-  ])
-})
-
-test('should provide mapped props to mapped component', () => {
-  let root: ReactTestRenderer | undefined
-  act(() => {
-    root = renderer.create(<MapToComponents {...defaultProps} />)
-  })
-  const json = root?.toJSON()
-
-  expect(json).toEqual([
-    { type: 'div', props: {}, children: ['Type 1'] },
-    { type: 'div', props: {}, children: ['Type 2'] },
-    {
-      type: 'div',
-      props: { mappedData: true },
-      children: ['withMapDataToProps'],
-    },
-    { type: 'div', props: {}, children: ['Type 1'] },
-  ])
+  expect(screen.getByTestId('type1')).toHaveAttribute('data-props', '')
+  expect(screen.getByTestId('type2')).toHaveAttribute('data-props', '')
+  expect(screen.getByTestId('withMapDataToProps')).toHaveAttribute(
+    'data-props',
+    '',
+  )
 })
 
 test('should use defaultMapDataToProps if mapDataToProps for type is not available', () => {
-  let root: ReactTestRenderer | undefined
-  act(() => {
-    root = renderer.create(
-      <MapToComponents
-        {...defaultProps}
-        list={[1]}
-        defaultMapDataToProps={() => ({ defaultMappedData: true })}
-      />,
-    )
-  })
-  const json = root?.toJSON()
+  render(
+    <MapToComponents
+      {...defaultProps}
+      list={[defaultProps.list[0]]}
+      mapDataToProps={undefined}
+      defaultMapDataToProps={() => ({ defaultMappedData: true })}
+    />,
+  )
 
-  expect(json?.props).toEqual({ defaultMappedData: true })
+  expect(screen.getByTestId('type1')).toHaveAttribute(
+    'data-props',
+    'defaultMappedData',
+  )
 })
 
 test('should provide detailed data to mapDataToProps', () => {
+  render(<MapToComponents {...defaultProps} />)
+
   const { list } = defaultProps
-  act(() => {
-    renderer.create(<MapToComponents {...defaultProps} />)
-  })
 
   expect(defaultProps.mapDataToProps.withMapDataToProps).toHaveBeenCalledWith({
     list,
     keys: list.map(defaultProps.getKey),
     types: list.map(defaultProps.getType),
     comps: [
-      defaultProps.map[1],
-      defaultProps.map[2],
+      defaultProps.map.type1,
+      defaultProps.map.type2,
       defaultProps.map.withMapDataToProps,
-      defaultProps.map[1],
     ],
-    contexts: [undefined, undefined, { mappedContext: true }, undefined],
+    contexts: [undefined, undefined, { mappedContext: true }],
     map: defaultProps.map,
-    meta: { foo: defaultProps.meta.foo },
+    meta: defaultProps.meta,
     index: 2,
     data: list[2],
     context: { mappedContext: true },
@@ -169,37 +142,35 @@ test('should provide detailed data to mapDataToProps', () => {
     previousContext: undefined,
     previousKey: defaultProps.getKey(list[1], 1, list),
     previousType: defaultProps.getType(list[1], 1, list),
-    PreviousComp: defaultProps.map[2],
-    nextData: list[3],
+    PreviousComp: defaultProps.map.type2,
+    nextData: undefined,
     nextContext: undefined,
-    nextKey: defaultProps.getKey(list[3], 3, list),
-    nextType: defaultProps.getType(list[3], 3, list),
-    NextComp: defaultProps.map[1],
+    nextKey: undefined,
+    nextType: undefined,
+    NextComp: undefined,
   })
 })
 
 test('should use defaultMapDataToContext if mapDataToContext for type is not available', () => {
-  let root: ReactTestRenderer | undefined
-  act(() => {
-    root = renderer.create(
-      <MapToComponents
-        {...defaultProps}
-        list={[1]}
-        defaultMapDataToContext={() => ({ defaultMappedContext: true })}
-        mapDataToProps={{ 1: ({ context }) => context }}
-      />,
-    )
-  })
-  const json = root?.toJSON()
+  render(
+    <MapToComponents
+      {...defaultProps}
+      list={[defaultProps.list[0]]}
+      defaultMapDataToContext={() => ({ defaultMappedContext: true })}
+      mapDataToProps={{ type1: ({ context }) => context }}
+    />,
+  )
 
-  expect(json?.props).toEqual({ defaultMappedContext: true })
+  expect(screen.getByTestId('type1')).toHaveAttribute(
+    'data-props',
+    'defaultMappedContext',
+  )
 })
 
 test('should provide detailed data to mapDataToContext', () => {
+  render(<MapToComponents {...defaultProps} />)
+
   const { list } = defaultProps
-  act(() => {
-    renderer.create(<MapToComponents {...defaultProps} />)
-  })
 
   expect(defaultProps.mapDataToContext.withMapDataToProps).toHaveBeenCalledWith(
     {
@@ -207,13 +178,12 @@ test('should provide detailed data to mapDataToContext', () => {
       keys: list.map(defaultProps.getKey),
       types: list.map(defaultProps.getType),
       comps: [
-        defaultProps.map[1],
-        defaultProps.map[2],
+        defaultProps.map.type1,
+        defaultProps.map.type2,
         defaultProps.map.withMapDataToProps,
-        defaultProps.map[1],
       ],
       map: defaultProps.map,
-      meta: { foo: defaultProps.meta.foo },
+      meta: defaultProps.meta,
       index: 2,
       data: list[2],
       key: defaultProps.getKey(list[2], 2, list),
@@ -222,37 +192,38 @@ test('should provide detailed data to mapDataToContext', () => {
       previousData: list[1],
       previousKey: defaultProps.getKey(list[1], 1, list),
       previousType: defaultProps.getType(list[1], 1, list),
-      PreviousComp: defaultProps.map[2],
-      nextData: list[3],
-      nextKey: defaultProps.getKey(list[3], 3, list),
-      nextType: defaultProps.getType(list[3], 3, list),
-      NextComp: defaultProps.map[1],
+      PreviousComp: defaultProps.map.type2,
+      nextData: undefined,
+      nextKey: undefined,
+      nextType: undefined,
+      NextComp: undefined,
     },
   )
 })
 
 test('should render default mapping if mapping is not available', () => {
-  const Default: React.FC = () => <>default</>
+  render(
+    <MapToComponents
+      {...defaultProps}
+      list={[{ id: 1, type: 'no-mapping' }]}
+      default={() => <div data-testid="default" />}
+    />,
+  )
 
-  let root: ReactTestRenderer | undefined
-  act(() => {
-    root = renderer.create(
-      <MapToComponents {...defaultProps} list={[3]} default={Default} />,
-    )
-  })
-  const json = root?.toJSON()
-
-  expect(json).toEqual('default')
+  expect(screen.getByTestId('default')).toBeInTheDocument()
 })
 
 test('should throw if component mapping is not available and no default is provided', () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
   expect(() => {
-    act(() => {
-      renderer.create(<MapToComponents {...defaultProps} list={[1, 3]} />)
-    })
-  }).toThrow('Could not find a component mapping for type "3"')
+    render(
+      <MapToComponents
+        {...defaultProps}
+        list={[{ id: 1, type: 'no-mapping' }]}
+      />,
+    )
+  }).toThrow('Could not find a component mapping for type "no-mapping"')
 
   spy.mockRestore()
 })
