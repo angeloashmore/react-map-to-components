@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import * as React from 'react'
 
 type DefaultCompProps = {
   type: string
@@ -12,50 +12,48 @@ const DefaultComp = ({ type }: DefaultCompProps) => {
  * Collection of data about an individual list item and its surrounding
  * context.
  */
-export interface Ctx<
-  ComponentMap extends Record<string, React.ComponentType> = Record<
-    string,
-    React.ComponentType
-  >,
-  DataElement = any,
-  Meta = any
+export interface TCtx<
+  T extends keyof TMap,
+  TMap extends Record<string, React.ComponentType>,
+  TData,
+  TMeta
 > {
   /** List of elements. */
-  list: DataElement[]
+  list: TData[]
   /** List of keys for each element in `list`. */
   keys: React.Key[]
   /** List of types for each element in `list`. */
-  types: (keyof ComponentMap)[]
+  types: (keyof TMap)[]
   /** List of components for each element in `list`. */
   comps: React.ComponentType[]
   /** Mapping of types to React components. */
-  map: ComponentMap
+  map: TMap
   /** Data provided to the `meta` prop. */
-  meta?: Meta
+  meta?: TMeta
   /** Index of the current element. */
   index: number
   /** The current element. */
-  data: DataElement
+  data: TData
   /** Key of the current element. */
   key: React.Key
   /** Type of the current element. */
-  type: keyof ComponentMap
+  type: T
   /** Component for the current element. */
-  Comp: React.ComponentType
+  Comp: TMap[T]
   /** The previous element. */
-  previousData?: DataElement
+  previousData?: TData
   /** Key of the previous element. */
   previousKey?: React.Key
   /** Type of the previous element. */
-  previousType?: keyof ComponentMap
+  previousType?: keyof TMap
   /** Component for the previous element. */
   PreviousComp?: React.ComponentType
   /** The next element. */
-  nextData?: DataElement
+  nextData?: TData
   /** Key of the next element. */
   nextKey?: React.Key
   /** Type of the next element. */
-  nextType?: keyof ComponentMap
+  nextType?: keyof TMap
   /** Component for the next element. */
   NextComp?: React.ComponentType
 }
@@ -64,129 +62,132 @@ export interface Ctx<
  * Collection of data about an individual list item and its surrounding
  * context. Includes context properties from `mapDataToContext`.
  */
-export interface CtxWithContext<
-  ComponentMap extends Record<string, React.ComponentType> = Record<
-    string,
-    React.ComponentType
-  >,
-  DataElement = any,
-  Meta = any,
-  Context = any
-> extends Ctx<ComponentMap, DataElement, Meta> {
+export interface TCtxWithContext<
+  T extends keyof TMap,
+  TMap extends Record<string, React.ComponentType>,
+  TData,
+  TMeta,
+  TContext
+> extends TCtx<T, TMap, TData, TMeta> {
   /** List of context values for each element in `list`. */
-  contexts: (Context | undefined)[]
+  contexts: (TContext | undefined)[]
   /** Context for the current element. */
-  context?: Context
+  context?: TContext
   /** Context for the previous element. */
-  previousContext?: Context
+  previousContext?: TContext
   /** Context for the next element */
-  nextContext?: Context
+  nextContext?: TContext
 }
 
 /**
  * Function mapping an element in `list` and its surrounding context to
  * contextual data for the element's `mapDataToContext` function.
  */
-export type MapDataToContextFn<
-  ComponentMap extends Record<string, React.ComponentType> = Record<
-    string,
-    React.ComponentType
-  >,
-  DataElement = any,
-  Meta = any,
-  Context = any
-> = (ctx: Ctx<ComponentMap, DataElement, Meta>) => Context | undefined
+export type TMapDataToContextFn<
+  T extends keyof TMap,
+  TMap extends Record<string, React.ComponentType>,
+  TData,
+  TMeta,
+  TContext
+> = (ctx: TCtx<T, TMap, TData, TMeta>) => TContext | undefined
 
 /**
  * Function mapping an element in `list` and its surrounding context to props
  * for the component to be rendered.
  */
-export type MapDataToPropsFn<
-  ComponentMap extends Record<string, React.ComponentType> = Record<
-    string,
-    React.ComponentType
-  >,
-  DataElement = any,
-  Meta = any,
-  Context = any,
-  Props = any
+export type TMapDataToPropsFn<
+  T extends keyof TMap,
+  TMap extends Record<string, React.ComponentType>,
+  TData,
+  TMeta,
+  TContext,
+  TProps
 > = (
-  ctx: CtxWithContext<ComponentMap, DataElement, Meta, Context>,
-) => Props | undefined
+  ctx: TCtxWithContext<T, TMap, TData, TMeta, TContext>,
+) => TProps | undefined
 
 export interface MapToComponentsProps<
-  ComponentMap extends Record<string, React.ComponentType> = Record<
+  TMap extends Record<string, React.ComponentType> = Record<
     string,
     React.ComponentType
   >,
-  DataElement = any,
-  Meta = any,
-  Context = any,
-  Props = any
+  TData = any,
+  TMeta = any,
+  TContext = any,
+  TProps = any
 > {
   /** Function that maps an element to a unique key. */
-  getKey: <T>(data: T, index: number, list: T[]) => React.Key
+  getKey: (data: TData, index: number, list: TData[]) => React.Key
+
   /** Function that maps an element to a type. */
-  getType: <T>(data: T, index: number, list: T[]) => keyof ComponentMap
+  getType: (data: TData, index: number, list: TData[]) => keyof TMap
+
   /** List of data to map to components. Can contain mixed types. */
-  list?: DataElement[]
+  list?: TData[]
+
   /** Object mapping a data type to a React component to be rendered. */
-  map: ComponentMap
+  map: TMap
+
   /**
    * Arbitrary data that is made available to functions in `mapDataToProps` and
    * `mapDataToProps`.
    * */
-  meta?: Meta
+  meta?: TMeta
+
   /**
    * Function mapping an element in `list` and its surrounding context to
    * contextual data for the element's `mapDataToContext` function.
    */
-  mapDataToContext?: Partial<
-    Record<
-      keyof ComponentMap,
-      MapDataToContextFn<ComponentMap, DataElement, Meta, Context>
-    >
-  >
+  mapDataToContext?: {
+    [T in keyof TMap]?: TMapDataToContextFn<T, TMap, TData, TMeta, TContext>
+  }
+
   /**
    * Function mapping an element in `list` and its surrounding context to props
    * for the component to be rendered.
    */
-  mapDataToProps?: Partial<
-    Record<
-      keyof ComponentMap,
-      MapDataToPropsFn<ComponentMap, DataElement, Meta, Context, Props>
+  mapDataToProps?: {
+    [T in keyof TMap]?: TMapDataToPropsFn<
+      T,
+      TMap,
+      TData,
+      TMeta,
+      TContext,
+      TProps
     >
-  >
+  }
+
   /** Component to be rendered if an element type is not defined in `map`. */
   default?: React.ComponentType
+
   /**Function used to determine context for a type not defined in `mapDataToContext`. */
-  defaultMapDataToContext?: MapDataToContextFn<
-    ComponentMap,
-    DataElement,
-    Meta,
-    Context
+  defaultMapDataToContext?: TMapDataToContextFn<
+    keyof TMap,
+    TMap,
+    TData,
+    TMeta,
+    TContext
   >
+
   /** Function used to determine props for a type not defined in `mapDataToProps`. */
-  defaultMapDataToProps?: MapDataToPropsFn<
-    ComponentMap,
-    DataElement,
-    Meta,
-    Context,
-    any
+  defaultMapDataToProps?: TMapDataToPropsFn<
+    keyof TMap,
+    TMap,
+    TData,
+    TMeta,
+    TContext,
+    TProps
   >
 }
 
 export const MapToComponents = <
-  Meta = any,
-  ComponentMap extends Record<string, React.ComponentType> = Record<
-    string,
-    React.ComponentType
-  >,
-  DataElement = any,
-  Context = any,
-  Props = any
+  TMap extends Record<string, React.ComponentType>,
+  TData,
+  TMeta,
+  TContext,
+  TProps
 >(
-  props: MapToComponentsProps<ComponentMap, DataElement, Meta, Context, Props>,
+  props: MapToComponentsProps<TMap, TData, TMeta, TContext, TProps>,
 ): React.ReactElement => {
   const {
     getKey,
@@ -201,15 +202,15 @@ export const MapToComponents = <
     defaultMapDataToProps,
   } = props
 
-  const keys = useMemo(() => list.map(getKey), [list, getKey])
-  const types = useMemo(() => list.map(getType), [list, getType])
-  const comps = useMemo(
-    () => types.map((type) => map[type] || defaultMapping),
+  const keys = React.useMemo(() => list.map(getKey), [list, getKey])
+  const types = React.useMemo(() => list.map(getType), [list, getType])
+  const comps = React.useMemo(
+    () => types.map((type) => map[type] ?? defaultMapping),
     [types, map, defaultMapping],
   )
 
-  const gatherData = useCallback(
-    (index: number): Ctx<ComponentMap, DataElement, Meta> => ({
+  const gatherData = React.useCallback(
+    (index: number): TCtx<keyof TMap, TMap, TData, TMeta> => ({
       list,
       keys,
       types,
@@ -233,7 +234,7 @@ export const MapToComponents = <
     [comps, keys, types, meta, list, map],
   )
 
-  const contexts = useMemo(
+  const contexts = React.useMemo(
     () =>
       list.map((_, index) => {
         const fn = mapDataToContext?.[types[index]] ?? defaultMapDataToContext
@@ -243,10 +244,10 @@ export const MapToComponents = <
     [gatherData, list, mapDataToContext, types, defaultMapDataToContext],
   )
 
-  const gatherDataForMapDataToProps = useCallback(
+  const gatherDataForMapDataToProps = React.useCallback(
     (
       index: number,
-    ): CtxWithContext<ComponentMap, DataElement, Meta, Context> => ({
+    ): TCtxWithContext<keyof TMap, TMap, TData, TMeta, TContext> => ({
       ...gatherData(index),
       contexts,
       context: contexts[index],
@@ -256,7 +257,7 @@ export const MapToComponents = <
     [gatherData, contexts],
   )
 
-  const propsList = useMemo(
+  const propsList = React.useMemo(
     () =>
       list.map((_, index) => {
         const fn = mapDataToProps?.[types[index]] ?? defaultMapDataToProps

@@ -1,17 +1,17 @@
-import React from 'react'
+import * as React from 'react'
 import renderer, { act, ReactTestRenderer } from 'react-test-renderer'
 
-import { MapToComponents, MapToComponentsProps } from '../src'
+import { MapToComponents } from '../src'
 
 const defaultProps = {
   getKey: jest.fn().mockImplementation((_, i) => i),
   getType: jest.fn().mockImplementation((x) => x),
   list: [1, 2, 'withMapDataToProps', 1],
   map: {
-    1: (props) => <div {...props}>Type 1</div>,
-    2: (props) => <div {...props}>Type 2</div>,
+    type1: (props) => <div {...props}>Type 1</div>,
+    type2: (props) => <div {...props}>Type 2</div>,
     withMapDataToProps: (props) => <div {...props}>withMapDataToProps</div>,
-  } as MapToComponentsProps['map'],
+  },
   mapDataToContext: {
     withMapDataToProps: jest.fn().mockReturnValue({ mappedContext: true }),
   },
@@ -27,7 +27,12 @@ beforeEach(() => jest.clearAllMocks())
 test('should provide getKey with item, index, and list', () => {
   const { list } = defaultProps
   act(() => {
-    renderer.create(<MapToComponents {...defaultProps} />)
+    renderer.create(
+      <MapToComponents
+        {...defaultProps}
+        mapDataToProps={{ type1: (ctx) => ({ foo: ctx.type }) }}
+      />,
+    )
   })
 
   expect(defaultProps.getKey).toHaveBeenNthCalledWith(1, list[0], 0, list)
