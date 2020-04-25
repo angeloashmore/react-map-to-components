@@ -66,17 +66,16 @@ export interface TCtxWithContext<
   T extends keyof TMap,
   TMap extends Record<string, React.ComponentType>,
   TData,
-  TMeta,
-  TContext
+  TMeta
 > extends TCtx<T, TMap, TData, TMeta> {
   /** List of context values for each element in `list`. */
-  contexts: (TContext | undefined)[]
+  contexts: any[]
   /** Context for the current element. */
-  context?: TContext
+  context?: any
   /** Context for the previous element. */
-  previousContext?: TContext
+  previousContext?: any
   /** Context for the next element */
-  nextContext?: TContext
+  nextContext?: any
 }
 
 /**
@@ -87,9 +86,8 @@ export type TMapDataToContextFn<
   T extends keyof TMap,
   TMap extends Record<string, React.ComponentType>,
   TData,
-  TMeta,
-  TContext
-> = (ctx: TCtx<T, TMap, TData, TMeta>) => TContext | undefined
+  TMeta
+> = (ctx: TCtx<T, TMap, TData, TMeta>) => any
 
 /**
  * Function mapping an element in `list` and its surrounding context to props
@@ -99,12 +97,8 @@ export type TMapDataToPropsFn<
   T extends keyof TMap,
   TMap extends Record<string, React.ComponentType>,
   TData,
-  TMeta,
-  TContext,
-  TProps
-> = (
-  ctx: TCtxWithContext<T, TMap, TData, TMeta, TContext>,
-) => TProps | undefined
+  TMeta
+> = (ctx: TCtxWithContext<T, TMap, TData, TMeta>) => Record<string, any>
 
 export interface MapToComponentsProps<
   TMap extends Record<string, React.ComponentType> = Record<
@@ -113,8 +107,7 @@ export interface MapToComponentsProps<
   >,
   TData = any,
   TMeta = any,
-  TContext = any,
-  TProps = any
+  TDefaultProps = any
 > {
   /** Function that maps an element to a unique key. */
   getKey: (data: TData, index: number, list: TData[]) => React.Key
@@ -139,7 +132,7 @@ export interface MapToComponentsProps<
    * contextual data for the element's `mapDataToContext` function.
    */
   mapDataToContext?: {
-    [T in keyof TMap]?: TMapDataToContextFn<T, TMap, TData, TMeta, TContext>
+    [T in keyof TMap]?: TMapDataToContextFn<T, TMap, TData, TMeta>
   }
 
   /**
@@ -147,47 +140,25 @@ export interface MapToComponentsProps<
    * for the component to be rendered.
    */
   mapDataToProps?: {
-    [T in keyof TMap]?: TMapDataToPropsFn<
-      T,
-      TMap,
-      TData,
-      TMeta,
-      TContext,
-      TProps
-    >
+    [T in keyof TMap]?: TMapDataToPropsFn<T, TMap, TData, TMeta>
   }
 
   /** Component to be rendered if an element type is not defined in `map`. */
-  default?: React.ComponentType
+  default?: React.ComponentType<TDefaultProps>
 
   /**Function used to determine context for a type not defined in `mapDataToContext`. */
-  defaultMapDataToContext?: TMapDataToContextFn<
-    keyof TMap,
-    TMap,
-    TData,
-    TMeta,
-    TContext
-  >
+  defaultMapDataToContext?: TMapDataToContextFn<keyof TMap, TMap, TData, TMeta>
 
   /** Function used to determine props for a type not defined in `mapDataToProps`. */
-  defaultMapDataToProps?: TMapDataToPropsFn<
-    keyof TMap,
-    TMap,
-    TData,
-    TMeta,
-    TContext,
-    TProps
-  >
+  defaultMapDataToProps?: TMapDataToPropsFn<keyof TMap, TMap, TData, TMeta>
 }
 
 export const MapToComponents = <
   TMap extends Record<string, React.ComponentType>,
   TData,
-  TMeta,
-  TContext,
-  TProps
+  TMeta
 >(
-  props: MapToComponentsProps<TMap, TData, TMeta, TContext, TProps>,
+  props: MapToComponentsProps<TMap, TData, TMeta>,
 ): React.ReactElement => {
   const {
     getKey,
@@ -245,9 +216,7 @@ export const MapToComponents = <
   )
 
   const gatherDataForMapDataToProps = React.useCallback(
-    (
-      index: number,
-    ): TCtxWithContext<keyof TMap, TMap, TData, TMeta, TContext> => ({
+    (index: number): TCtxWithContext<keyof TMap, TMap, TData, TMeta> => ({
       ...gatherData(index),
       contexts,
       context: contexts[index],
