@@ -70,13 +70,13 @@ export interface TCtxWithContext<
   TContext
 > extends TCtx<T, TMap, TData, TMeta> {
   /** List of context values for each element in `list`. */
-  contexts: any[]
+  contexts: (TContext | undefined)[]
   /** Context for the current element. */
-  context: TContext
+  context: TContext | undefined
   /** Context for the previous element. */
-  previousContext?: any
+  previousContext?: unknown
   /** Context for the next element */
-  nextContext?: any
+  nextContext?: unknown
 }
 
 /**
@@ -87,8 +87,9 @@ export type TMapDataToContextFn<
   T extends keyof TMap,
   TMap extends Record<string, React.ComponentType>,
   TData,
-  TMeta
-> = (ctx: TCtx<T, TMap, TData, TMeta>) => any
+  TMeta,
+  TContext
+> = (ctx: TCtx<T, TMap, TData, TMeta>) => TContext
 
 /**
  * Function mapping an element in `list` and its surrounding context to props
@@ -102,17 +103,17 @@ export type TMapDataToPropsFn<
   TContext
 > = (
   ctx: TCtxWithContext<T, TMap, TData, TMeta, TContext>,
-) => Record<string, any>
+) => Record<string, unknown>
 
 export interface MapToComponentsProps<
   TMap extends Record<string, React.ComponentType> = Record<
     string,
     React.ComponentType
   >,
-  TData = any,
-  TMeta = any,
-  TContext = any,
-  TDefaultProps = any
+  TData = unknown,
+  TMeta = unknown,
+  TContext = unknown,
+  TDefaultProps = unknown
 > {
   /** Function that maps an element to a unique key. */
   getKey: (data: TData, index: number, list: TData[]) => React.Key
@@ -137,7 +138,7 @@ export interface MapToComponentsProps<
    * contextual data for the element's `mapDataToContext` function.
    */
   mapDataToContext?: {
-    [T in keyof TMap]?: TMapDataToContextFn<T, TMap, TData, TMeta>
+    [T in keyof TMap]?: TMapDataToContextFn<T, TMap, TData, TMeta, TContext>
   }
 
   /**
@@ -152,7 +153,13 @@ export interface MapToComponentsProps<
   default?: React.ComponentType<TDefaultProps>
 
   /**Function used to determine context for a type not defined in `mapDataToContext`. */
-  defaultMapDataToContext?: TMapDataToContextFn<keyof TMap, TMap, TData, TMeta>
+  defaultMapDataToContext?: TMapDataToContextFn<
+    keyof TMap,
+    TMap,
+    TData,
+    TMeta,
+    TContext
+  >
 
   /** Function used to determine props for a type not defined in `mapDataToProps`. */
   defaultMapDataToProps?: TMapDataToPropsFn<
@@ -274,5 +281,3 @@ export const MapToComponents = <
     }),
   )
 }
-
-export default MapToComponents

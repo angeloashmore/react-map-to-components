@@ -12,21 +12,21 @@ const defaultProps = {
     { id: 3, type: 'withMapDataToProps' },
   ],
   map: {
-    type1: (props: any) => (
+    type1: (props: Record<string, unknown | undefined>) => (
       <div
         data-testid="type1"
         data-type="type1"
         data-props={Object.keys(props)}
       />
     ),
-    type2: (props: any) => (
+    type2: (props: Record<string, unknown | undefined>) => (
       <div
         data-testid="type2"
         data-type="type2"
         data-props={Object.keys(props)}
       />
     ),
-    withMapDataToProps: (props: any) => (
+    withMapDataToProps: (props: Record<string, unknown | undefined>) => (
       <div
         data-testid="withMapDataToProps"
         data-type="withMapDataToProps"
@@ -157,7 +157,7 @@ test('should use defaultMapDataToContext if mapDataToContext for type is not ava
       {...defaultProps}
       list={[defaultProps.list[0]]}
       defaultMapDataToContext={() => ({ defaultMappedContext: true })}
-      mapDataToProps={{ type1: ({ context }) => context }}
+      mapDataToProps={{ type1: ({ context }) => ({ ...context }) }}
     />,
   )
 
@@ -214,7 +214,10 @@ test('should render default mapping if mapping is not available', () => {
 })
 
 test('should throw if component mapping is not available and no default is provided', () => {
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  const noop = () => {
+    /* Do nothing */
+  }
+  const spy = jest.spyOn(console, 'error').mockImplementation(noop)
 
   expect(() => {
     render(
