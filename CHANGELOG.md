@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/angeloashmore/react-map-to-components/compare/v1.2.0...v1.2.1) (2020-06-01)
+
+
+### Bug Fixes
+
+* revert types to use any ([9403ed2](https://github.com/angeloashmore/react-map-to-components/commit/9403ed21f2f25da581f413bd315208ad4e68b004))
+
 ## [1.2.0](https://github.com/angeloashmore/react-map-to-components/compare/v1.1.0...v1.2.0) (2020-06-01)
 
 

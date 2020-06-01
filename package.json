@@ -1,6 +1,6 @@
 {
   "name": "react-map-to-components",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "React component to map a list of data to a component based on its type",
   "sideEffects": false,
   "main": "dist/react-map-to-components.js",
