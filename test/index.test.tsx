@@ -12,6 +12,7 @@ const defaultProps = {
     { id: 3, type: 'withMapDataToProps' },
   ],
   map: {
+    // eslint-disable-next-line
     type1: (props: Record<string, unknown | undefined>) => (
       <div
         data-testid="type1"
@@ -19,6 +20,7 @@ const defaultProps = {
         data-props={Object.keys(props)}
       />
     ),
+    // eslint-disable-next-line
     type2: (props: Record<string, unknown | undefined>) => (
       <div
         data-testid="type2"
@@ -26,6 +28,7 @@ const defaultProps = {
         data-props={Object.keys(props)}
       />
     ),
+    // eslint-disable-next-line
     withMapDataToProps: (props: Record<string, unknown | undefined>) => (
       <div
         data-testid="withMapDataToProps"
