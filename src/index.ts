@@ -74,9 +74,9 @@ export interface TCtxWithContext<
   /** Context for the current element. */
   context: TContext | undefined
   /** Context for the previous element. */
-  previousContext?: unknown
+  previousContext?: any
   /** Context for the next element */
-  nextContext?: unknown
+  nextContext?: any
 }
 
 /**
@@ -103,17 +103,17 @@ export type TMapDataToPropsFn<
   TContext
 > = (
   ctx: TCtxWithContext<T, TMap, TData, TMeta, TContext>,
-) => Record<string, unknown>
+) => Record<string, any>
 
 export interface MapToComponentsProps<
   TMap extends Record<string, React.ComponentType> = Record<
     string,
     React.ComponentType
   >,
-  TData = unknown,
-  TMeta = unknown,
-  TContext = unknown,
-  TDefaultProps = unknown
+  TData = any,
+  TMeta = any,
+  TContext = any,
+  TDefaultProps = any
 > {
   /** Function that maps an element to a unique key. */
   getKey: (data: TData, index: number, list: TData[]) => React.Key

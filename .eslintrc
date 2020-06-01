@@ -10,6 +10,7 @@
           "delimiter": "none"
         }
       }
-    ]
+    ],
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }
